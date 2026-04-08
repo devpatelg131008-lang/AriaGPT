@@ -2100,6 +2100,10 @@
 
   // Initialize - will be called after auth check
   window.initPanelManager = () => PanelManager.init();
+  
+  // Export helper functions for other scripts (onboarding, etc.)
+  window.getUserId = getUserId;
+  window.getUserKey = getUserKey;
 </script>
 
 <!-- Firebase Auth -->
