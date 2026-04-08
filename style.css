@@ -3159,3 +3159,217 @@ kbd {
   width: 18px;
   height: 18px;
 }
+
+/* ============================================================
+   Onboarding Modal Styles
+   ============================================================ */
+
+.onboarding-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.onboarding-overlay.hidden {
+  display: none;
+}
+
+.onboarding-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(12, 13, 18, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.onboarding-panel {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  background: var(--bg2);
+  border: 1px solid var(--b1);
+  border-radius: 20px;
+  padding: 40px 32px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.4s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.onboarding-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.onboarding-logo {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 16px;
+}
+
+.onboarding-logo svg {
+  width: 100%;
+  height: 100%;
+}
+
+.onboarding-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--txt1);
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.onboarding-subtitle {
+  font-size: 0.9375rem;
+  color: var(--txt2);
+  font-weight: 400;
+}
+
+.onboarding-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.onboarding-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.onboarding-field label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--txt1);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.onboarding-field label .required {
+  color: var(--violet);
+}
+
+.onboarding-field label .optional {
+  color: var(--txt3);
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.onboarding-field input,
+.onboarding-field select {
+  height: 48px;
+  padding: 0 14px;
+  background: var(--bg1);
+  border: 1px solid var(--b1);
+  border-radius: 12px;
+  color: var(--txt1);
+  font-size: 0.9375rem;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.onboarding-field input::placeholder {
+  color: var(--txt3);
+}
+
+.onboarding-field input:focus,
+.onboarding-field select:focus {
+  border-color: var(--b-focus);
+  background: var(--bg0);
+  box-shadow: 0 0 0 3px var(--glow);
+}
+
+.onboarding-field input:invalid:not(:placeholder-shown) {
+  border-color: var(--err);
+}
+
+.onboarding-field select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%239193a8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 40px;
+}
+
+.onboarding-field select optgroup {
+  background: var(--bg2);
+  color: var(--txt1);
+  font-weight: 600;
+  font-style: normal;
+}
+
+.onboarding-field select option {
+  background: var(--bg2);
+  color: var(--txt1);
+  padding: 8px;
+}
+
+.onboarding-submit {
+  height: 52px;
+  margin-top: 12px;
+  background: var(--grad);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(167, 139, 250, 0.3);
+}
+
+.onboarding-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(167, 139, 250, 0.4);
+}
+
+.onboarding-submit:active {
+  transform: translateY(0);
+}
+
+.onboarding-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .onboarding-panel {
+    padding: 32px 24px;
+  }
+  
+  .onboarding-title {
+    font-size: 1.5rem;
+  }
+  
+  .onboarding-field input,
+  .onboarding-field select,
+  .onboarding-submit {
+    height: 52px;
+  }
+}
