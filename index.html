@@ -1113,22 +1113,45 @@
     }
   };
 
+  // Get current user ID for data isolation
+  function getUserId() {
+    const user = JSON.parse(localStorage.getItem('ariagpt_user') || '{}');
+    return user.uid || 'anonymous';
+  }
+
+  // Get user-specific storage key
+  function getUserKey(key) {
+    return `aria_${getUserId()}_${key}`;
+  }
+
   // Panel Management System
   const PanelManager = {
     currentPanel: null,
     currentDeleteId: null,
     data: {
-      projects: JSON.parse(localStorage.getItem('aria_projects') || '[]'),
-      knowledge: JSON.parse(localStorage.getItem('aria_knowledge') || '[]'),
-      favorites: JSON.parse(localStorage.getItem('aria_favorites') || '[]'),
-      assistants: JSON.parse(localStorage.getItem('aria_assistants') || '[]'),
-      history: JSON.parse(localStorage.getItem('chat_history') || '[]'),
-      templates: JSON.parse(localStorage.getItem('aria_templates') || '[]'),
-      tags: JSON.parse(localStorage.getItem('aria_tags') || '[]'),
-      settings: JSON.parse(localStorage.getItem('aria_settings') || '{}')
+      projects: [],
+      knowledge: [],
+      favorites: [],
+      assistants: [],
+      history: [],
+      templates: [],
+      tags: [],
+      settings: {}
+    },
+
+    loadData() {
+      this.data.projects = JSON.parse(localStorage.getItem(getUserKey('projects')) || '[]');
+      this.data.knowledge = JSON.parse(localStorage.getItem(getUserKey('knowledge')) || '[]');
+      this.data.favorites = JSON.parse(localStorage.getItem(getUserKey('favorites')) || '[]');
+      this.data.assistants = JSON.parse(localStorage.getItem(getUserKey('assistants')) || '[]');
+      this.data.history = JSON.parse(localStorage.getItem(getUserKey('chat_history')) || '[]');
+      this.data.templates = JSON.parse(localStorage.getItem(getUserKey('templates')) || '[]');
+      this.data.tags = JSON.parse(localStorage.getItem(getUserKey('tags')) || '[]');
+      this.data.settings = JSON.parse(localStorage.getItem(getUserKey('settings')) || '{}');
     },
 
     init() {
+      this.loadData();
       this.bindNavItems();
       this.bindModalButtons();
       this.renderAll();
@@ -1873,7 +1896,7 @@
     },
 
     save(key) {
-      localStorage.setItem('aria_' + key, JSON.stringify(this.data[key]));
+      localStorage.setItem(getUserKey(key), JSON.stringify(this.data[key]));
     },
 
     escapeHtml(text) {
@@ -1920,7 +1943,7 @@
       templates: PanelManager.data.templates,
       tags: PanelManager.data.tags,
       settings: PanelManager.data.settings,
-      history: JSON.parse(localStorage.getItem('chat_history') || '[]')
+      history: JSON.parse(localStorage.getItem(getUserKey('chat_history')) || '[]')
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -1933,7 +1956,11 @@
   };
   window.clearAllData = () => {
     ModalManager.showDelete('Clear all data?', 'All your projects, knowledge, favorites, assistants, templates, tags, and settings will be permanently deleted. This cannot be undone.', () => {
-      ['aria_projects', 'aria_knowledge', 'aria_favorites', 'aria_assistants', 'aria_templates', 'aria_tags', 'aria_settings', 'chat_history'].forEach(key => localStorage.removeItem(key));
+      // Remove user-specific data
+      const keys = ['projects', 'knowledge', 'favorites', 'assistants', 'templates', 'tags', 'settings', 'chat_history'];
+      keys.forEach(key => localStorage.removeItem(getUserKey(key)));
+      // Also clear chat sessions from script.js
+      localStorage.removeItem(getUserKey('v3'));
       location.reload();
     });
   };
@@ -2071,8 +2098,8 @@
   window.switchInfoTab = (tab) => InfoPanelManager.switchTab(tab);
   window.InfoPanelManager = InfoPanelManager;
 
-  // Initialize
-  PanelManager.init();
+  // Initialize - will be called after auth check
+  window.initPanelManager = () => PanelManager.init();
 </script>
 
 <!-- Firebase Auth -->
@@ -2101,13 +2128,17 @@
       // Not signed in, redirect to login
       window.location.href = 'login.html';
     } else {
-      // Signed in, update UI with user info
+      // Signed in FIRST, then load user-specific data
       localStorage.setItem('ariagpt_user', JSON.stringify({
         uid: user.uid,
         displayName: user.displayName,
         email: user.email,
         photoURL: user.photoURL
       }));
+      
+      // NOW safe to load data with correct user ID
+      if (window.initPanelManager) window.initPanelManager();
+      if (window.initChatApp) window.initChatApp();
       
       // Update settings panel with user info
       const userNameEl = document.getElementById('userName');
@@ -2128,6 +2159,14 @@
   window.signOutUser = async () => {
     try {
       await signOut(auth);
+      // Clear in-memory data to prevent any leakage
+      if (window.PanelManager) {
+        PanelManager.data = { projects: [], knowledge: [], favorites: [], assistants: [], history: [], templates: [], tags: [], settings: {} };
+      }
+      if (window.S) {
+        S.sessions = [];
+        S.currentId = null;
+      }
       localStorage.removeItem('ariagpt_user');
       window.location.href = 'login.html';
     } catch (error) {
