@@ -5,10 +5,22 @@
    ============================================================ */
 'use strict';
 
+/* ── User-specific Storage Helpers ─────────────────── */
+function getUserId() {
+  const user = JSON.parse(localStorage.getItem('ariagpt_user') || '{}');
+  return user.uid || 'anonymous';
+}
+
+function getUserKey(key) {
+  return `ariagpt_${getUserId()}_${key}`;
+}
+
 /* ── Config ─────────────────────────────────────────── */
 const API_URL   = 'http://localhost:3000/api/chat';
-const STORE_KEY = 'ariagpt_v3';
 const MAX_LEN   = 8000;
+
+// Dynamic store key - must call function each time to get current user's key
+function getStoreKey() { return getUserKey('v3'); }
 
 /* AI Providers Configuration */
 const AI_PROVIDERS = {
@@ -77,8 +89,8 @@ const S = {
   currentId:     null,
   loading:       false,
   abort:         null,
-  theme:         localStorage.getItem('ariagpt_theme') || 'dark',
-  sidebarOpen:   localStorage.getItem('ariagpt_sb') !== '0',
+  theme:         localStorage.getItem(getUserKey('theme')) || 'dark',
+  sidebarOpen:   localStorage.getItem(getUserKey('sb')) !== '0',
   searchQ:       '',
   ctxId:         null,
   renameId:      null,
@@ -86,14 +98,14 @@ const S = {
   feedbackMap:   {},
   statusTimer:   null,
   // Advanced state
-  apiKeys:       JSON.parse(localStorage.getItem('ariagpt_apikeys') || '{}'),
-  currentModel:  localStorage.getItem('ariagpt_model') || 'aria-q1.5',
-  currentProvider: localStorage.getItem('ariagpt_provider') || 'aria',
-  pinnedMsgs:    JSON.parse(localStorage.getItem('ariagpt_pins') || '[]'),
+  apiKeys:       JSON.parse(localStorage.getItem(getUserKey('apikeys')) || '{}'),
+  currentModel:  localStorage.getItem(getUserKey('model')) || 'aria-q1.5',
+  currentProvider: localStorage.getItem(getUserKey('provider')) || 'aria',
+  pinnedMsgs:    JSON.parse(localStorage.getItem(getUserKey('pins')) || '[]'),
   chatSearchQ:   '',
   suggestTimer:  null,
   lastSuggestions: [],
-  useLocalBackend: localStorage.getItem('ariagpt_localbackend') !== 'false',
+  useLocalBackend: localStorage.getItem(getUserKey('localbackend')) !== 'false',
 };
 
 /* ══════════════════════════════════════════════════════
@@ -188,14 +200,14 @@ function init() {
   console.log('=== AriaGPT Initializing ===');
   
   // Clear old model settings to ensure Aria Q1.5 models load correctly
-  localStorage.removeItem('ariagpt_model');
-  localStorage.removeItem('ariagpt_provider');
+  localStorage.removeItem(getUserKey('model'));
+  localStorage.removeItem(getUserKey('provider'));
   
   loadSessions();
   applyTheme(false);
   applySidebar(false);
 
-  const last  = localStorage.getItem('ariagpt_last');
+  const last  = localStorage.getItem(getUserKey('last'));
   const found = S.sessions.find(s => s.id === last);
   found ? switchSession(last) : newSession();
 
@@ -215,12 +227,12 @@ function uid() {
 }
 
 function loadSessions() {
-  try { S.sessions = JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); }
+  try { S.sessions = JSON.parse(localStorage.getItem(getStoreKey()) || '[]'); }
   catch { S.sessions = []; }
 }
 
 function persist() {
-  try { localStorage.setItem(STORE_KEY, JSON.stringify(S.sessions)); } catch {}
+  try { localStorage.setItem(getStoreKey(), JSON.stringify(S.sessions)); } catch {}
 }
 
 function getSession(id = S.currentId) {
@@ -231,7 +243,7 @@ function newSession() {
   const s = { id: uid(), title: 'New Chat', messages: [], created: Date.now(), updated: Date.now() };
   S.sessions.unshift(s);
   S.currentId = s.id;
-  localStorage.setItem('ariagpt_last', s.id);
+  localStorage.setItem(getUserKey('last'), s.id);
   persist();
   renderHistory();
   renderFeed();
@@ -242,7 +254,7 @@ function newSession() {
 function switchSession(id) {
   if (!getSession(id)) return;
   S.currentId = id;
-  localStorage.setItem('ariagpt_last', id);
+  localStorage.setItem(getUserKey('last'), id);
   renderHistory();
   renderFeed();
   refreshSend();
@@ -1277,7 +1289,7 @@ function applyTheme(save = true) {
   document.documentElement.setAttribute('data-theme', S.theme);
   D.icoSun.classList.toggle('hidden', S.theme === 'light');
   D.icoMoon.classList.toggle('hidden', S.theme === 'dark');
-  if (save) localStorage.setItem('ariagpt_theme', S.theme);
+  if (save) localStorage.setItem(getUserKey('theme'), S.theme);
 }
 function toggleTheme() { S.theme = S.theme === 'dark' ? 'light' : 'dark'; applyTheme(); toast(`Switched to ${S.theme} mode`, 'ok'); }
 
@@ -1285,7 +1297,7 @@ function toggleTheme() { S.theme = S.theme === 'dark' ? 'light' : 'dark'; applyT
 function applySidebar(save = true) {
   D.sidebar.classList.toggle('collapsed', !S.sidebarOpen);
   D.mobOverlay.classList.toggle('hidden', !S.sidebarOpen || window.innerWidth > 768);
-  if (save) localStorage.setItem('ariagpt_sb', S.sidebarOpen ? '1' : '0');
+  if (save) localStorage.setItem(getUserKey('sb'), S.sidebarOpen ? '1' : '0');
 }
 function toggleSidebar() { S.sidebarOpen = !S.sidebarOpen; applySidebar(); }
 function closeSidebar()  { S.sidebarOpen = false; applySidebar(); }
@@ -1491,7 +1503,7 @@ function getApiKey(provider) {
 
 function setApiKey(provider, key) {
   S.apiKeys[provider] = key;
-  localStorage.setItem('ariagpt_apikeys', JSON.stringify(S.apiKeys));
+  localStorage.setItem(getUserKey('apikeys'), JSON.stringify(S.apiKeys));
 }
 
 function getModelInfo(modelId) {
@@ -1507,8 +1519,8 @@ function setModel(modelId) {
   if (info) {
     S.currentModel = modelId;
     S.currentProvider = info.provider;
-    localStorage.setItem('ariagpt_model', modelId);
-    localStorage.setItem('ariagpt_provider', info.provider);
+    localStorage.setItem(getUserKey('model'), modelId);
+    localStorage.setItem(getUserKey('provider'), info.provider);
     updateModelSelectorUI();
     toast(`Switched to ${info.name}`, 'ok');
   }
@@ -1838,7 +1850,7 @@ function togglePinMessage(msgId) {
       toast('Message pinned', 'ok');
     }
   }
-  localStorage.setItem('ariagpt_pins', JSON.stringify(S.pinnedMsgs));
+  localStorage.setItem(getUserKey('pins'), JSON.stringify(S.pinnedMsgs));
   updatePinIndicators();
 }
 
@@ -2071,7 +2083,7 @@ function saveApiKeys() {
 
 function toggleLocalBackend(checked) {
   S.useLocalBackend = checked;
-  localStorage.setItem('ariagpt_localbackend', checked);
+  localStorage.setItem(getUserKey('localbackend'), checked);
 }
 
 /* ══════════════════════════════════════════════════════
@@ -2243,7 +2255,8 @@ function setupEnhancedShortcuts() {
 }
 
 /* ── Boot ── */
-document.addEventListener('DOMContentLoaded', () => {
+// Expose init for auth callback - will be called after Firebase confirms user
+window.initChatApp = () => {
   init();
   setupEnhancedShortcuts();
-});
+};
