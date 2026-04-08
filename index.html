@@ -2171,8 +2171,8 @@
         S.currentId = null;
       }
       localStorage.removeItem('ariagpt_user');
-      // Clear device session on sign-out (user explicitly wants to disconnect)
-      localStorage.removeItem('ariagpt_device_session');
+      // Note: device session is NOT cleared on sign-out
+      // This allows returning users on the same device to skip onboarding
       window.location.href = 'login.html';
     } catch (error) {
       console.error('Sign out error:', error);
@@ -2275,15 +2275,10 @@
   const OnboardingManager = {
     init() {
       const hasCompleted = localStorage.getItem(getUserKey('onboarding_complete'));
-      const deviceSession = JSON.parse(localStorage.getItem('ariagpt_device_session') || '{}');
-      const user = JSON.parse(localStorage.getItem('ariagpt_user') || '{}');
       
-      // Skip onboarding if:
-      // 1. Already completed onboarding, OR
-      // 2. Returning on recognized device (has device session matching current user)
-      const isRecognizedDevice = deviceSession.uid === user.uid && deviceSession.verified;
-      
-      if (!hasCompleted && !isRecognizedDevice) {
+      // Show onboarding only if user hasn't completed it
+      // Device recognition only affects login flow, not onboarding
+      if (!hasCompleted) {
         this.show();
       }
     },
