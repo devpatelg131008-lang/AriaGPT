@@ -2140,6 +2140,9 @@
       if (window.initPanelManager) window.initPanelManager();
       if (window.initChatApp) window.initChatApp();
       
+      // Show onboarding for new users
+      if (window.OnboardingManager) window.OnboardingManager.init();
+      
       // Update settings panel with user info
       const userNameEl = document.getElementById('userName');
       const userEmailEl = document.getElementById('userEmail');
@@ -2168,12 +2171,163 @@
         S.currentId = null;
       }
       localStorage.removeItem('ariagpt_user');
+      // Clear device session on sign-out (user explicitly wants to disconnect)
+      localStorage.removeItem('ariagpt_device_session');
       window.location.href = 'login.html';
     } catch (error) {
       console.error('Sign out error:', error);
       alert('Failed to sign out');
     }
   };
+</script>
+
+<!-- Onboarding Modal -->
+<div id="onboardingModal" class="onboarding-overlay hidden">
+  <div class="onboarding-backdrop"></div>
+  <div class="onboarding-panel">
+    <div class="onboarding-header">
+      <div class="onboarding-logo">
+        <svg viewBox="0 0 60 60" fill="none">
+          <g stroke="url(#onboardGrad)" stroke-width="3" stroke-linecap="round">
+            <path d="M30,8 A22,22 0 0,1 48.5,30"/>
+            <path d="M47.5,36 A22,22 0 0,1 14.5,44"/>
+            <path d="M12.5,36 A22,22 0 0,1 19.8,10.8"/>
+          </g>
+          <circle cx="30" cy="30" r="3" fill="url(#onboardGrad)"/>
+          <defs>
+            <linearGradient id="onboardGrad" x1="8" y1="8" x2="52" y2="52">
+              <stop offset="0%" stop-color="#a78bfa"/>
+              <stop offset="100%" stop-color="#6366f1"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <h2 class="onboarding-title">Welcome to AriaGPT</h2>
+      <p class="onboarding-subtitle">Help us personalize your experience</p>
+    </div>
+    
+    <form id="onboardingForm" class="onboarding-form">
+      <div class="onboarding-field">
+        <label for="onboardName">Your Name <span class="required">*</span></label>
+        <input type="text" id="onboardName" placeholder="Enter your name" required maxlength="50">
+      </div>
+      
+      <div class="onboarding-field">
+        <label for="onboardAge">Age <span class="optional">(optional)</span></label>
+        <input type="number" id="onboardAge" placeholder="Enter your age" min="13" max="120">
+      </div>
+      
+      <div class="onboarding-field">
+        <label for="onboardProfession">Profession <span class="required">*</span></label>
+        <select id="onboardProfession" required>
+          <option value="" disabled selected>Select your profession</option>
+          <optgroup label="Education">
+            <option value="student">Student</option>
+            <option value="teacher">Teacher / Professor</option>
+            <option value="researcher">Researcher</option>
+          </optgroup>
+          <optgroup label="Technology">
+            <option value="developer">Software Developer</option>
+            <option value="engineer">Engineer</option>
+            <option value="data_scientist">Data Scientist</option>
+            <option value="product_manager">Product Manager</option>
+            <option value="designer">Designer</option>
+          </optgroup>
+          <optgroup label="Business">
+            <option value="business_owner">Business Owner / Entrepreneur</option>
+            <option value="executive">Executive / C-Suite</option>
+            <option value="manager">Manager</option>
+            <option value="marketing">Marketing Professional</option>
+            <option value="sales">Sales Professional</option>
+            <option value="consultant">Consultant</option>
+          </optgroup>
+          <optgroup label="Creative">
+            <option value="writer">Writer / Author</option>
+            <option value="artist">Artist / Creative</option>
+            <option value="journalist">Journalist</option>
+            <option value="content_creator">Content Creator</option>
+          </optgroup>
+          <optgroup label="Healthcare & Science">
+            <option value="medical">Medical Professional</option>
+            <option value="scientist">Scientist</option>
+            <option value="academic">Academic</option>
+          </optgroup>
+          <optgroup label="Other">
+            <option value="legal">Legal Professional</option>
+            <option value="finance">Finance / Accounting</option>
+            <option value="government">Government / Public Sector</option>
+            <option value="nonprofit">Non-profit / NGO</option>
+            <option value="freelancer">Freelancer</option>
+            <option value="homemaker">Homemaker</option>
+            <option value="retired">Retired</option>
+            <option value="other">Other</option>
+          </optgroup>
+        </select>
+      </div>
+      
+      <button type="submit" class="onboarding-submit">Get Started</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Onboarding System
+  const OnboardingManager = {
+    init() {
+      const hasCompleted = localStorage.getItem(getUserKey('onboarding_complete'));
+      const deviceSession = JSON.parse(localStorage.getItem('ariagpt_device_session') || '{}');
+      const user = JSON.parse(localStorage.getItem('ariagpt_user') || '{}');
+      
+      // Skip onboarding if:
+      // 1. Already completed onboarding, OR
+      // 2. Returning on recognized device (has device session matching current user)
+      const isRecognizedDevice = deviceSession.uid === user.uid && deviceSession.verified;
+      
+      if (!hasCompleted && !isRecognizedDevice) {
+        this.show();
+      }
+    },
+    
+    show() {
+      const modal = document.getElementById('onboardingModal');
+      modal.classList.remove('hidden');
+      // Pre-fill name from Google account if available
+      const user = JSON.parse(localStorage.getItem('ariagpt_user') || '{}');
+      if (user.displayName) {
+        document.getElementById('onboardName').value = user.displayName;
+      }
+    },
+    
+    hide() {
+      document.getElementById('onboardingModal').classList.add('hidden');
+    },
+    
+    save(name, age, profession) {
+      const profile = {
+        name,
+        age: age || null,
+        profession,
+        completedAt: Date.now()
+      };
+      localStorage.setItem(getUserKey('onboarding_profile'), JSON.stringify(profile));
+      localStorage.setItem(getUserKey('onboarding_complete'), 'true');
+      this.hide();
+    }
+  };
+  
+  // Form submission
+  document.getElementById('onboardingForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('onboardName').value.trim();
+    const age = document.getElementById('onboardAge').value;
+    const profession = document.getElementById('onboardProfession').value;
+    
+    if (name && profession) {
+      OnboardingManager.save(name, age, profession);
+    }
+  });
+  
+  window.OnboardingManager = OnboardingManager;
 </script>
 </body>
 </html>
