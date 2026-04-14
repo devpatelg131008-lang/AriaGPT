@@ -1,0 +1,2574 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AriaGPT — by GroqSocial</title>
+  <meta name="description" content="AriaGPT — Intelligent AI Assistant by GroqSocial"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark-dimmed.min.css"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ═══════════════════════════ SIDEBAR ═══════════════════════════ -->
+<aside class="sidebar" id="sidebar">
+
+  <div class="sidebar-head">
+    <!-- GroqSocial Brand -->
+    <div class="sidebar-brand-text">GroqSocial</div>
+    <button class="icon-btn" id="sidebarClose" title="Collapse sidebar">
+      <!-- Custom collapse icon -->
+      <svg viewBox="0 0 20 20" fill="none">
+        <rect x="3" y="3" width="6" height="14" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M13 7l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="sidebar-product">
+    <div class="product-pill">
+      <!-- Logo -->
+      <svg viewBox="0 0 36 36" fill="none" class="product-mark">
+        <g stroke="url(#gsM2)" stroke-width="2.8" stroke-linecap="round">
+          <path d="M18,7 A11,11 0 0,1 28.5,19.5"/>
+          <path d="M27.5,23 A11,11 0 0,1 10.5,26"/>
+          <path d="M8.5,23 A11,11 0 0,1 13.8,7.8"/>
+        </g>
+        <circle cx="18" cy="18" r="2.2" fill="url(#gsM2)"/>
+        <defs>
+          <linearGradient id="gsM2" x1="7" y1="7" x2="29" y2="29" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#a78bfa"/>
+            <stop offset="100%" stop-color="#6366f1"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      
+      <!-- Info Stack -->
+      <div class="product-info-stack">
+        <div class="product-name">AriaGPT</div>
+        <div class="product-meta">
+          <span class="product-model">powered by Gemini</span>
+          <span class="product-badge">Free</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-actions">
+    <button class="new-chat-btn" id="newChatBtn">
+      <!-- Plus icon -->
+      <svg viewBox="0 0 20 20" fill="none">
+        <path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      New chat
+    </button>
+  </div>
+
+  <div class="search-row">
+    <div class="search-field">
+      <svg viewBox="0 0 20 20" fill="none" class="search-ico">
+        <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M15.5 15.5l-3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+      <input id="searchInput" type="text" placeholder="Search chats…" autocomplete="off" spellcheck="false"/>
+      <button class="search-x hidden" id="searchClear">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav" id="sidebarNav" aria-label="Sidebar navigation">
+    <div class="nav-section">
+      <button class="nav-item" data-section="projects">
+        <span class="nav-label">Projects</span>
+        <span class="nav-desc">organized work</span>
+      </button>
+      <button class="info-btn" onclick="openInfoPanel('projects')" title="What is Projects?">
+        <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.4"/><path d="M10 6v1M10 9v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="nav-section">
+      <button class="nav-item" data-section="favorites">
+        <span class="nav-label">Favorites</span>
+      </button>
+      <button class="info-btn" onclick="openInfoPanel('favorites')" title="What is Favorites?">
+        <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.4"/><path d="M10 6v1M10 9v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="nav-section">
+      <button class="nav-item" data-section="assistants">
+        <span class="nav-label">My Assistants</span>
+        <span class="nav-desc">custom AIs</span>
+      </button>
+      <button class="info-btn" onclick="openInfoPanel('assistants')" title="What is My Assistants?">
+        <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.4"/><path d="M10 6v1M10 9v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="nav-section">
+      <button class="nav-item" data-section="tags">
+        <span class="nav-label">Tags</span>
+        <span class="nav-desc">organize chats</span>
+      </button>
+      <button class="info-btn" onclick="openInfoPanel('tags')" title="What is Tags?">
+        <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.4"/><path d="M10 6v1M10 9v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Chat History (for script.js compatibility) -->
+  <div class="hist-nav" id="histNav"></div>
+
+  <!-- Section Panels -->
+  <div class="section-panels" id="sectionPanels">
+    <!-- Projects Panel -->
+    <div class="panel" id="projectsPanel" data-panel="projects">
+      <div class="panel-header">
+        <h3>Projects</h3>
+        <button class="panel-close" onclick="closePanel()">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="panel-content">
+        <div class="panel-actions">
+          <button class="btn-primary" onclick="createProject()">
+            <svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            New Project
+          </button>
+        </div>
+        <div class="panel-list" id="projectsList"></div>
+        <div class="panel-empty" id="projectsEmpty">
+          <svg viewBox="0 0 48 48" fill="none"><path d="M24 8l16 8v16l-16 8-16-8V16l16-8z" stroke="url(#p1)" stroke-width="2"/><path d="M24 24v16M24 24l16-8M24 24L8 16" stroke="url(#p1)" stroke-width="2"/><defs><linearGradient id="p1" x1="8" y1="8" x2="40" y2="40"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#6366f1"/></linearGradient></defs></svg>
+          <p>No projects yet</p>
+          <span>Create your first project to organize your work</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Favorites Panel -->
+    <div class="panel" id="favoritesPanel" data-panel="favorites">
+      <div class="panel-header">
+        <h3>Favorites</h3>
+        <button class="panel-close" onclick="closePanel()">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="panel-content">
+        <div class="panel-list" id="favoritesList"></div>
+        <div class="panel-empty" id="favoritesEmpty">
+          <svg viewBox="0 0 48 48" fill="none"><path d="M24 8l4.5 9.5L38 19l-7 7.5L32 38l-8-5-8 5 1.5-11.5-7-7.5 9.5-1.5L24 8z" stroke="url(#f1)" stroke-width="2" fill="none"/><defs><linearGradient id="f1" x1="8" y1="8" x2="40" y2="40"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#6366f1"/></linearGradient></defs></svg>
+          <p>No favorites yet</p>
+          <span>Star important chats to access them quickly</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Assistants Panel -->
+    <div class="panel" id="assistantsPanel" data-panel="assistants">
+      <div class="panel-header">
+        <h3>My Assistants</h3>
+        <button class="panel-close" onclick="closePanel()">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="panel-content">
+        <div class="panel-actions">
+          <button class="btn-primary" onclick="createAssistant()">
+            <svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            Create Assistant
+          </button>
+        </div>
+        <div class="panel-grid" id="assistantsList"></div>
+        <div class="panel-empty" id="assistantsEmpty">
+          <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="20" r="10" stroke="url(#a1)" stroke-width="2"/><path d="M10 40c0-7.7 6.3-14 14-14s14 6.3 14 14" stroke="url(#a1)" stroke-width="2"/><defs><linearGradient id="a1" x1="8" y1="8" x2="40" y2="40"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#6366f1"/></linearGradient></defs></svg>
+          <p>No custom assistants</p>
+          <span>Create AI assistants with custom personalities and expertise</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tags Panel -->
+    <div class="panel" id="tagsPanel" data-panel="tags">
+      <div class="panel-header">
+        <h3>Tags</h3>
+        <button class="panel-close" onclick="closePanel()">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="panel-content">
+        <div class="panel-actions">
+          <button class="btn-primary" onclick="createTag()">
+            <svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            Create Tag
+          </button>
+        </div>
+        <div class="tags-cloud" id="tagsList"></div>
+        <div class="panel-empty" id="tagsEmpty">
+          <svg viewBox="0 0 48 48" fill="none"><path d="M14 10l20 6-8 22-20-6 8-22z" stroke="url(#tg1)" stroke-width="2"/><path d="M22 16l-2 6" stroke="url(#tg1)" stroke-width="2" stroke-linecap="round"/><defs><linearGradient id="tg1" x1="8" y1="8" x2="40" y2="40"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#6366f1"/></linearGradient></defs></svg>
+          <p>No tags yet</p>
+          <span>Create tags to organize and find chats quickly</span>
+        </div>
+        <div class="panel-section" id="taggedChatsSection" style="display:none;">
+          <h4 class="panel-section-title" id="selectedTagName"></h4>
+          <div class="panel-list" id="taggedChatsList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Panel -->
+    <div class="panel" id="settingsPanel" data-panel="settings">
+      <div class="panel-header">
+        <h3>Settings</h3>
+        <button class="panel-close" onclick="closePanel()">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="panel-content">
+        <!-- Account Section -->
+        <div class="settings-section">
+          <h4 class="settings-title">Account</h4>
+          <div class="user-info" id="userInfo">
+            <div class="user-avatar" id="userAvatar"></div>
+            <div class="user-details">
+              <span class="user-name" id="userName">Not signed in</span>
+              <span class="user-email" id="userEmail"></span>
+            </div>
+          </div>
+          <button class="btn-ghost sign-out-btn" id="signOutBtn" onclick="signOutUser()">
+            <svg viewBox="0 0 20 20" fill="none"><path d="M10 4H6a2 2 0 00-2 2v8a2 2 0 002 2h4M14 14l4-4m0 0l-4-4m4 4H10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Sign Out
+          </button>
+        </div>
+        <div class="settings-section">
+          <h4 class="settings-title">Appearance</h4>
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Theme</span>
+              <span class="setting-desc">Choose your preferred color scheme</span>
+            </div>
+            <select class="setting-select" id="themeSelect" onchange="changeTheme(this.value)">
+              <option value="dark">Dark</option>
+              <option value="light">Light</option>
+              <option value="auto">Auto</option>
+            </select>
+          </div>
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Compact Mode</span>
+              <span class="setting-desc">Reduce spacing and font sizes</span>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="compactMode" onchange="toggleCompact(this.checked)">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h4 class="settings-title">Chat</h4>
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Auto-save Chats</span>
+              <span class="setting-desc">Automatically save conversations</span>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="autoSave" checked onchange="toggleSetting('autoSave', this.checked)">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Code Wrap</span>
+              <span class="setting-desc">Wrap long lines in code blocks</span>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="codeWrap" onchange="toggleSetting('codeWrap', this.checked)">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Stream Responses</span>
+              <span class="setting-desc">Show AI responses word by word</span>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="streamMode" checked onchange="toggleSetting('streamMode', this.checked)">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h4 class="settings-title">Data</h4>
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Export All Data</span>
+              <span class="setting-desc">Download all your data as JSON</span>
+            </div>
+            <button class="btn-ghost" onclick="exportAllData()">Export</button>
+          </div>
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Clear All Data</span>
+              <span class="setting-desc">Delete all chats, projects, and settings</span>
+            </div>
+            <button class="btn-danger" onclick="clearAllData()">Clear</button>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h4 class="settings-title">About</h4>
+          <div class="about-info">
+            <div class="about-logo">AriaGPT</div>
+            <div class="about-version">Version 1.0.0</div>
+            <div class="about-links">
+              <a href="#" onclick="showToast('Documentation coming soon', 'info'); return false;">Documentation</a>
+              <a href="#" onclick="showToast('Feedback coming soon', 'info'); return false;">Send Feedback</a>
+              <a href="#" onclick="showToast('Privacy policy coming soon', 'info'); return false;">Privacy</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings at bottom of sidebar -->
+  <div class="sidebar-settings">
+    <button class="nav-item settings-btn" data-section="settings">
+      <svg viewBox="0 0 20 20" fill="none">
+        <circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.2 4.2l1.4 1.4M14.4 14.4l1.4 1.4M15.8 4.2l-1.4 1.4M4.2 15.8l1.4-1.4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+      <span class="nav-label">Settings</span>
+    </button>
+  </div>
+
+  <div class="sidebar-foot">
+    <div class="foot-status">
+      <span class="live-dot"></span>
+      <span class="live-label">Connected</span>
+    </div>
+    <div class="foot-btns">
+      <button class="icon-btn foot-btn" id="exportBtn" title="Export conversation">
+        <!-- Download arrow -->
+        <svg viewBox="0 0 20 20" fill="none">
+          <path d="M10 3v10M6 9l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M3 15h14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <button class="icon-btn foot-btn" id="shortcutsBtn" title="Keyboard shortcuts">
+        <!-- Keyboard icon -->
+        <svg viewBox="0 0 20 20" fill="none">
+          <rect x="2" y="5" width="16" height="11" rx="2" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M5 9h1M9 9h1M13 9h1M5 12.5h1M7.5 12.5h5M14 12.5h1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <button class="icon-btn foot-btn" id="themeBtn" title="Toggle theme">
+        <!-- Sun/Moon combined -->
+        <svg id="icoSun" viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="10" r="3.5" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M10 2.5v1M10 16.5v1M3 10H2M18 10h-1M5.05 5.05l-.7-.7M15.65 15.65l-.7-.7M14.95 5.05l.7-.7M4.35 15.65l.7-.7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+        <svg id="icoMoon" viewBox="0 0 20 20" fill="none" class="hidden">
+          <path d="M16 11.5A6 6 0 118.5 4a4.5 4.5 0 007.5 7.5z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+</aside>
+
+<!-- ════════════════════════ MAIN PANEL ═══════════════════════════ -->
+<div class="main-panel" id="mainPanel">
+
+  <!-- Topbar -->
+  <header class="topbar" id="topbar">
+    <div class="topbar-left">
+      <button class="menu-toggle" id="sidebarOpen" title="Open sidebar">
+        <svg viewBox="0 0 20 20" fill="none">
+          <path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="topbar-brand">
+      <!-- Mark only for topbar -->
+      <svg viewBox="0 0 24 24" fill="none" class="topbar-mark">
+        <g stroke="url(#gsT)" stroke-width="2" stroke-linecap="round">
+          <path d="M12,4.5 A7.5,7.5 0 0,1 19.5,13.5"/>
+          <path d="M18.8,16 A7.5,7.5 0 0,1 6.2,18.5"/>
+          <path d="M5.2,16 A7.5,7.5 0 0,1 8.8,5.3"/>
+        </g>
+        <circle cx="12" cy="12" r="1.8" fill="url(#gsT)"/>
+        <defs>
+          <linearGradient id="gsT" x1="4" y1="4" x2="20" y2="20" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#a78bfa"/>
+            <stop offset="100%" stop-color="#6366f1"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="topbar-name" id="topbarTitle">AriaGPT</span>
+    </div>
+
+    <div class="topbar-right">
+      <!-- Delete Chat -->
+      <button class="icon-btn topbar-btn" id="topbarClearBtn" title="Clear this chat">
+        <svg viewBox="0 0 20 20" fill="none">
+          <path d="M5 5h10l-1 11a1 1 0 01-1 .9H7a1 1 0 01-1-.9L5 5z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M3 5h14M8 5V3.5h4V5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M8 9v4M12 9v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <!-- Enhanced Export Menu with Multiple Formats -->
+      <div class="export-menu-wrap">
+        <button class="icon-btn topbar-btn" id="exportBtn" title="Download chat" onclick="showExportMenu()">
+          <svg viewBox="0 0 20 20" fill="none">
+            <path d="M10 3v10M6 9l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M3 15h14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <!-- Export Dropdown Menu -->
+        <div class="export-dropdown hidden" id="exportDropdown">
+          <div class="export-header">Download as</div>
+          <button class="export-option" onclick="exportChat('pdf')">
+            <svg viewBox="0 0 20 20" fill="none"><path d="M4 4h12v12H4V4z" stroke="currentColor" stroke-width="1.4"/><path d="M4 8h12M7 4v12M13 4v12" stroke="currentColor" stroke-width="1.2" opacity=".4"/></svg>
+            <span>PDF Document</span>
+          </button>
+          <button class="export-option" onclick="exportChat('html')">
+            <svg viewBox="0 0 20 20" fill="none"><path d="M4 6l-2 4 2 4M16 6l2 4-2 4M7 5l6 10M9 3l2 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>HTML Page</span>
+          </button>
+          <button class="export-option" onclick="exportChat('png')">
+            <svg viewBox="0 0 20 20" fill="none"><rect x="3" y="4" width="14" height="12" rx="2" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="9" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M3 13l4-4 3 2 3-3 4 4" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            <span>PNG Image</span>
+          </button>
+          <button class="export-option" onclick="exportChat('markdown')">
+            <svg viewBox="0 0 20 20" fill="none"><path d="M4 5v10h3l3-4 3 4h3V5h-3l-3 4-3-4H4z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Markdown</span>
+          </button>
+          <button class="export-option" onclick="exportChat('json')">
+            <svg viewBox="0 0 20 20" fill="none"><path d="M4 5c0 2-1 3-1 5s1 3 1 5M16 5c0 2 1 3 1 5s-1 3-1 5M7 7c0 3 0 6 6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            <span>JSON Data</span>
+          </button>
+          <button class="export-option" onclick="exportChat('txt')">
+            <svg viewBox="0 0 20 20" fill="none"><path d="M3 4h14v12H3V4z" stroke="currentColor" stroke-width="1.4"/><path d="M5 7h10M5 10h8M5 13h6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            <span>Plain Text</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Share -->
+      <button class="icon-btn topbar-btn" id="shareBtn" title="Copy link">
+        <svg viewBox="0 0 20 20" fill="none">
+          <circle cx="15" cy="4.5" r="2" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="5" cy="10" r="2" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="15" cy="15.5" r="2" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M6.9 9l6.2-3.6M6.9 11l6.2 3.6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Chat viewport -->
+  <main class="chat-view" id="chatView">
+
+    <!-- Project Tabs (hidden by default) -->
+    <div class="project-tabs hidden" id="projectTabs">
+      <button class="project-tab active" data-tab="chat" onclick="PanelManager.switchTab('chat')">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M2 10a8 8 0 1116 0 8 8 0 01-16 0z" stroke="currentColor" stroke-width="1.5"/><path d="M6 8h8M6 12h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span id="chatTabName">Chat</span>
+      </button>
+      <button class="project-tab" data-tab="preview" onclick="PanelManager.switchTab('preview')">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M2 6l8-4 8 4v8l-8 4-8-4V6z" stroke="currentColor" stroke-width="1.5"/><path d="M10 12V2m0 10l6-3m-6 3L4 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Preview
+      </button>
+      <button class="project-tab" data-tab="notes" onclick="PanelManager.switchTab('notes')">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M4 4h12v12l-6 3-6-3V4z" stroke="currentColor" stroke-width="1.5"/><path d="M8 8h8M8 11h6M8 14h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Notes
+      </button>
+      <button class="project-tab-close" onclick="PanelManager.closeProjectTabs()" title="Close project">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content active" id="tabChat">
+      <!-- Welcome screen -->
+      <div class="welcome" id="welcome">
+        <div class="welcome-wrap">
+            <g stroke="url(#gsW)" stroke-width="3.5" stroke-linecap="round">
+              <path d="M30,12 A18,18 0 0,1 47.6,33"/>
+              <path d="M45.6,39 A18,18 0 0,1 18.4,43.8"/>
+              <path d="M14.4,39 A18,18 0 0,1 23.8,13.1"/>
+            </g>
+            <circle cx="30" cy="30" r="3.2" fill="url(#gsW)"/>
+            <text x="58" y="37" font-family="DM Sans, -apple-system, sans-serif" font-weight="700" font-size="20" letter-spacing="-0.5" fill="var(--txt1)">GroqSocial</text>
+            <defs>
+              <linearGradient id="gsW" x1="12" y1="12" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#a78bfa"/>
+                <stop offset="100%" stop-color="#6366f1"/>
+              </linearGradient>
+            </defs>
+          </svg>
+
+          <h1 class="welcome-heading" id="welcomeHeading">What can I help you with?</h1>
+          <p class="welcome-sub">AriaGPT is ready — ask anything, big or small.</p>
+        </div>
+
+      </div>
+    </div><!-- /welcome -->
+
+    <!-- Message feed -->
+    <div class="feed" id="feed" role="log" aria-live="polite" aria-label="Conversation"></div>
+
+  </main><!-- /chat-view -->
+
+  <!-- Scroll to bottom -->
+  <button class="scroll-btn hidden" id="scrollBtn" title="Scroll to bottom" aria-label="Scroll to bottom">
+    <svg viewBox="0 0 20 20" fill="none">
+      <path d="M10 4v10M5 10l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <!-- Input -->
+  <div class="input-zone" id="inputZone">
+    <div class="input-wrap">
+      <div class="input-box" id="inputBox">
+        <textarea
+          id="msgInput"
+          rows="1"
+          maxlength="8000"
+          placeholder="Ask AriaGPT anything…"
+          aria-label="Message input"
+          spellcheck="true"
+        ></textarea>
+        <div class="input-bar">
+          <div class="input-info">
+            <!-- Model Indicator -->
+            <span class="model-indicator" id="modelIndicator">Gemini</span>
+            <span class="wc" id="wc"></span>
+            <span class="cc" id="cc"></span>
+          </div>
+          <div class="input-controls">
+            <input type="file" id="fileInput" class="hidden" multiple accept=".txt,.md,.pdf,.doc,.docx,.png,.jpg,.jpeg,.gif,.webp,.svg" />
+            <button class="attach-btn icon-btn" id="attachBtn" title="Attach file">
+              <svg viewBox="0 0 20 20" fill="none">
+                <path d="M17.5 10l-7 7A5 5 0 013.5 10l7-7a3.5 3.5 0 015 5l-7.1 7A2 2 0 015.6 12l7-7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+            </button>
+            <span id="attachedFiles" class="attached-files hidden"></span>
+            <button class="send-btn" id="sendBtn" aria-label="Send">
+              <svg id="sendIco" viewBox="0 0 20 20" fill="none">
+                <path d="M16.5 3.5L3 9l5.5 1.5L10 16.5l6.5-13z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <svg id="stopIco" viewBox="0 0 20 20" fill="none" class="hidden">
+                <rect x="5" y="5" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.6"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <p class="input-note">AriaGPT may produce inaccurate information. Verify important facts independently.</p>
+    </div>
+  </div>
+
+</div><!-- /main-panel -->
+
+<!-- ══════════════════════════ MODALS ══════════════════════════════ -->
+
+<!-- Shortcuts -->
+<div class="overlay hidden" id="shortcutsModal" role="dialog" aria-modal="true">
+  <div class="modal modal-lg">
+    <div class="modal-hd">
+      <h2 class="modal-title">Keyboard shortcuts</h2>
+      <button class="icon-btn" data-close="shortcutsModal"><svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="modal-bd">
+      <div class="kb-section">
+        <h3 class="kb-section-title">Chat</h3>
+        <div class="kb-grid">
+          <div class="kb-row"><span>Send message</span><div class="kb-keys"><kbd>Enter</kbd></div></div>
+          <div class="kb-row"><span>New line</span><div class="kb-keys"><kbd>Shift</kbd><kbd>Enter</kbd></div></div>
+          <div class="kb-row"><span>Show suggestions</span><div class="kb-keys"><kbd>/</kbd></div></div>
+          <div class="kb-row"><span>Stop generation</span><div class="kb-keys"><kbd>Esc</kbd></div></div>
+        </div>
+      </div>
+      <div class="kb-section">
+        <h3 class="kb-section-title">Navigation</h3>
+        <div class="kb-grid">
+          <div class="kb-row"><span>New chat</span><div class="kb-keys"><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>O</kbd></div></div>
+          <div class="kb-row"><span>Focus input</span><div class="kb-keys"><kbd>Ctrl</kbd><kbd>I</kbd></div></div>
+          <div class="kb-row"><span>Search chats</span><div class="kb-keys"><kbd>Ctrl</kbd><kbd>K</kbd></div></div>
+          <div class="kb-row"><span>Search in chat</span><div class="kb-keys"><kbd>Ctrl</kbd><kbd>F</kbd></div></div>
+          <div class="kb-row"><span>Toggle sidebar</span><div class="kb-keys"><kbd>Ctrl</kbd><kbd>B</kbd></div></div>
+          <div class="kb-row"><span>Show pinned</span><div class="kb-keys"><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>P</kbd></div></div>
+        </div>
+      </div>
+      <div class="kb-section">
+        <h3 class="kb-section-title">Advanced</h3>
+        <div class="kb-grid">
+          <div class="kb-row"><span>API keys</span><div class="kb-keys"><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>K</kbd></div></div>
+          <div class="kb-row"><span>Export chat</span><div class="kb-keys"><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>E</kbd></div></div>
+          <div class="kb-row"><span>Export all chats</span><div class="kb-keys"><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>A</kbd></div></div>
+          <div class="kb-row"><span>Toggle theme</span><div class="kb-keys"><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>L</kbd></div></div>
+        </div>
+      </div>
+      <div class="kb-section">
+        <h3 class="kb-section-title">Message Actions</h3>
+        <div class="kb-grid">
+          <div class="kb-row"><span>Copy message</span><div class="kb-keys">Click <b>Copy</b></div></div>
+          <div class="kb-row"><span>Edit message</span><div class="kb-keys">Click <b>Edit</b></div></div>
+          <div class="kb-row"><span>Regenerate</span><div class="kb-keys">Click <b>Regenerate</b></div></div>
+          <div class="kb-row"><span>Pin message</span><div class="kb-keys"><kbd>Ctrl</kbd><kbd>P</kbd> (on message)</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Rename -->
+<div class="overlay hidden" id="renameModal" role="dialog" aria-modal="true">
+  <div class="modal modal-sm">
+    <div class="modal-hd">
+      <h2 class="modal-title">Rename conversation</h2>
+      <button class="icon-btn" data-close="renameModal"><svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="modal-bd">
+      <input class="modal-field" id="renameField" type="text" maxlength="80" placeholder="Conversation name"/>
+    </div>
+    <div class="modal-ft">
+      <button class="btn-ghost" data-close="renameModal">Cancel</button>
+      <button class="btn-primary" id="renameOk">Rename</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete -->
+<div class="overlay hidden" id="deleteModal" role="dialog" aria-modal="true">
+  <div class="modal modal-sm">
+    <div class="modal-hd">
+      <h2 class="modal-title" id="deleteModalTitle">Delete item?</h2>
+      <button class="icon-btn" onclick="ModalManager.close('deleteModal')"><svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="modal-bd">
+      <p class="modal-txt" id="deleteModalText">This action is permanent and cannot be undone.</p>
+    </div>
+    <div class="modal-ft">
+      <button class="btn-ghost" onclick="ModalManager.close('deleteModal')">Cancel</button>
+      <button class="btn-danger" id="deleteModalOk">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Create Project Modal -->
+<div class="overlay hidden" id="projectModal" role="dialog" aria-modal="true">
+  <div class="modal modal-sm">
+    <div class="modal-hd">
+      <h2 class="modal-title">New Project</h2>
+      <button class="icon-btn" onclick="ModalManager.close('projectModal')"><svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="modal-bd">
+      <div class="form-field">
+        <label>Project name</label>
+        <input type="text" id="projectNameField" class="modal-field" placeholder="Enter project name..." maxlength="80"/>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn-ghost" onclick="ModalManager.close('projectModal')">Cancel</button>
+      <button class="btn-primary" id="projectModalOk">Create</button>
+    </div>
+  </div>
+</div>
+
+<!-- Project Chats Modal - Select or Create Chat -->
+<div class="overlay hidden" id="projectChatsModal" role="dialog" aria-modal="true">
+  <div class="modal modal-md">
+    <div class="modal-hd">
+      <h2 class="modal-title" id="projectChatsTitle">Project Chats</h2>
+      <button class="icon-btn" onclick="ModalManager.close('projectChatsModal')"><svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="modal-bd">
+      <div class="project-chats-limit" id="projectChatsLimit">0/10 chats</div>
+      <div class="project-chats-list" id="projectChatsList">
+        <!-- Existing chats will be rendered here -->
+      </div>
+      <div class="project-chats-empty" id="projectChatsEmpty" style="display: none;">
+        <p>No chats yet. Create your first chat!</p>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn-ghost" onclick="ModalManager.close('projectChatsModal')">Close</button>
+      <button class="btn-primary" id="projectChatsCreateBtn" onclick="PanelManager.createNewProjectChat()">Start Chat</button>
+    </div>
+  </div>
+</div>
+
+<!-- Chat Name Modal -->
+<div class="overlay hidden" id="chatNameModal" role="dialog" aria-modal="true">
+  <div class="modal modal-sm">
+    <div class="modal-hd">
+      <h2 class="modal-title">New Chat</h2>
+      <button class="icon-btn" onclick="ModalManager.close('chatNameModal')"><svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="modal-bd">
+      <div class="form-field">
+        <label>Chat name</label>
+        <input type="text" id="chatNameField" class="modal-field" placeholder="Enter chat name..." maxlength="80"/>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn-ghost" onclick="ModalManager.close('chatNameModal')">Cancel</button>
+      <button class="btn-primary" id="chatNameModalOk">Start Chat</button>
+    </div>
+  </div>
+</div>
+
+<!-- Create Assistant Modal -->
+<div class="overlay hidden" id="assistantModal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-hd">
+      <h2 class="modal-title">New Assistant</h2>
+      <button class="icon-btn" onclick="ModalManager.close('assistantModal')"><svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="modal-bd">
+      <div class="form-field">
+        <label>Name</label>
+        <input type="text" id="assistantNameField" class="modal-field" placeholder="e.g., Code Expert..." maxlength="50"/>
+      </div>
+      <div class="form-field">
+        <label>Role</label>
+        <input type="text" id="assistantRoleField" class="modal-field" placeholder="e.g., Programming Assistant..." maxlength="50"/>
+      </div>
+      <div class="form-field">
+        <label>Description</label>
+        <textarea id="assistantDescField" class="modal-field modal-textarea" placeholder="Describe what this assistant does..." rows="3"></textarea>
+      </div>
+      <div class="form-field">
+        <label>Avatar Emoji</label>
+        <input type="text" id="assistantAvatarField" class="modal-field" placeholder="e.g., 🤖 (optional)" maxlength="10"/>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn-ghost" onclick="ModalManager.close('assistantModal')">Cancel</button>
+      <button class="btn-primary" id="assistantModalOk">Create</button>
+    </div>
+  </div>
+</div>
+
+<!-- Create Tag Modal -->
+<div class="overlay hidden" id="tagModal" role="dialog" aria-modal="true">
+  <div class="modal modal-md">
+    <div class="modal-hd">
+      <h2 class="modal-title" id="tagModalTitle">New Tag</h2>
+      <button class="icon-btn" onclick="ModalManager.close('tagModal')"><svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="modal-bd">
+      <div class="form-field">
+        <label>Tag name <span class="label-hint">(short variable name)</span></label>
+        <input type="text" id="tagNameField" class="modal-field" placeholder="e.g., greeting, signature, intro..." maxlength="30"/>
+      </div>
+      <div class="form-field">
+        <label>Description <span class="label-hint">(the long text to insert)</span></label>
+        <textarea id="tagDescField" class="modal-field modal-textarea" rows="6" placeholder="Enter the paragraph or text content that will be inserted when using this tag..."></textarea>
+      </div>
+      <input type="hidden" id="tagEditId" value=""/>
+    </div>
+    <div class="modal-ft">
+      <button class="btn-ghost" onclick="ModalManager.close('tagModal')">Cancel</button>
+      <button class="btn-primary" id="tagModalOk">Create</button>
+    </div>
+  </div>
+</div>
+
+<!-- Info Panel Modal -->
+<div class="overlay hidden" id="infoPanelModal" role="dialog" aria-modal="true">
+  <div class="modal modal-lg">
+    <div class="modal-hd">
+      <h2 class="modal-title" id="infoPanelTitle">About</h2>
+      <button class="icon-btn" onclick="closeInfoPanel()"><svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="modal-bd" style="padding: 0;">
+      <div class="info-tabs">
+        <button class="info-tab active" data-tab="whatis" onclick="switchInfoTab('whatis')">What is this?</button>
+        <button class="info-tab" data-tab="howtouse" onclick="switchInfoTab('howtouse')">How to use</button>
+      </div>
+      <div class="info-tab-content active" id="whatIsTab">
+        <p id="whatIsContent" class="info-text"></p>
+      </div>
+      <div class="info-tab-content" id="howToUseTab">
+        <ol id="howToUseContent" class="info-steps"></ol>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn-ghost" onclick="closeInfoPanel()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Context menu -->
+<div class="ctx-menu hidden" id="ctxMenu" role="menu">
+  <button class="ctx-item" id="ctxRename">
+    <svg viewBox="0 0 16 16" fill="none"><path d="M11 3l2 2-7 7H4v-2l7-7z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Rename
+  </button>
+  <button class="ctx-item" id="ctxExport">
+    <svg viewBox="0 0 16 16" fill="none"><path d="M8 2v8M5 7l3 3 3-3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12h12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+    Export
+  </button>
+  <div class="ctx-div"></div>
+  <button class="ctx-item ctx-del" id="ctxDelete">
+    <svg viewBox="0 0 16 16" fill="none"><path d="M2 4h12M5 4V3h6v1M6 7v4M10 7v4M3 4l1 9a1 1 0 001 .9h6a1 1 0 001-.9l1-9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+    Delete
+  </button>
+</div>
+
+<!-- Toasts -->
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<!-- Mobile overlay -->
+<div class="mob-overlay hidden" id="mobOverlay"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="script.js"></script>
+<script>
+  // Random welcome message
+  const welcomeMessages = [
+    "What do you want to achieve today?",
+    "Tell me your goal—I'll guide you.",
+    "Let's solve something important."
+  ];
+  const welcomeHeading = document.getElementById('welcomeHeading');
+  if (welcomeHeading) {
+    welcomeHeading.textContent = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
+  }
+
+  // Modal Management System
+  const ModalManager = {
+    callbacks: {},
+    
+    open(modalId, options = {}) {
+      const modal = document.getElementById(modalId);
+      if (!modal) return;
+      
+      modal.classList.remove('hidden');
+      this.callbacks[modalId] = options.onConfirm || (() => {});
+      
+      // Focus first input if exists
+      const firstInput = modal.querySelector('input, textarea');
+      if (firstInput) {
+        setTimeout(() => firstInput.focus(), 50);
+      }
+      
+      // Handle escape key
+      modal.onkeydown = (e) => {
+        if (e.key === 'Escape') this.close(modalId);
+      };
+    },
+    
+    close(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) modal.classList.add('hidden');
+    },
+    
+    confirm(modalId) {
+      const callback = this.callbacks[modalId];
+      if (callback) callback();
+      this.close(modalId);
+    },
+    
+    // Delete confirmation
+    showDelete(title, text, onConfirm) {
+      document.getElementById('deleteModalTitle').textContent = title || 'Delete item?';
+      document.getElementById('deleteModalText').textContent = text || 'This action is permanent and cannot be undone.';
+      this.open('deleteModal', { onConfirm });
+    }
+  };
+
+  // Get current user ID for data isolation
+  function getUserId() {
+    const user = JSON.parse(localStorage.getItem('ariagpt_user') || '{}');
+    return user.uid || 'anonymous';
+  }
+
+  // Get user-specific storage key
+  function getUserKey(key) {
+    return `ariagpt_${getUserId()}_${key}`;
+  }
+
+  // Panel Management System
+  const PanelManager = {
+    currentPanel: null,
+    currentDeleteId: null,
+    data: {
+      projects: [],
+      favorites: [],
+      assistants: [],
+      tags: [],
+      settings: {}
+    },
+
+    loadData() {
+      this.data.projects = JSON.parse(localStorage.getItem(getUserKey('projects')) || '[]');
+      this.data.favorites = JSON.parse(localStorage.getItem(getUserKey('favorites')) || '[]');
+      this.data.assistants = JSON.parse(localStorage.getItem(getUserKey('assistants')) || '[]');
+      this.data.tags = JSON.parse(localStorage.getItem(getUserKey('tags')) || '[]');
+      this.data.settings = JSON.parse(localStorage.getItem(getUserKey('settings')) || '{}');
+    },
+
+    init() {
+      this.loadData();
+      this.bindNavItems();
+      this.bindModalButtons();
+      this.renderAll();
+    },
+
+    bindNavItems() {
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.preventDefault();
+          const section = item.dataset.section;
+          this.openPanel(section);
+          
+          // Update active state
+          document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+          item.classList.add('active');
+        });
+      });
+    },
+
+    bindModalButtons() {
+      // Project Modal
+      document.getElementById('projectModalOk').onclick = () => {
+        const name = document.getElementById('projectNameField').value.trim();
+        if (!name) return;
+        const project = { id: Date.now().toString(), name, chatIds: [], created: Date.now(), updated: Date.now() };
+        this.data.projects.push(project);
+        this.save('projects');
+        this.renderProjects();
+        toast('Project created', 'ok');
+        document.getElementById('projectNameField').value = '';
+        ModalManager.close('projectModal');
+      };
+
+      // Chat Name Modal
+      document.getElementById('chatNameModalOk').onclick = () => {
+        this.confirmChatName();
+      };
+
+      // Assistant Modal
+      document.getElementById('assistantModalOk').onclick = () => {
+        const name = document.getElementById('assistantNameField').value.trim();
+        const role = document.getElementById('assistantRoleField').value.trim();
+        const description = document.getElementById('assistantDescField').value.trim();
+        const avatar = document.getElementById('assistantAvatarField').value.trim() || '🤖';
+        if (!name || !role || !description) return;
+        const assistant = { id: Date.now().toString(), name, role, description, avatar, created: Date.now() };
+        this.data.assistants.push(assistant);
+        this.save('assistants');
+        this.renderAssistants();
+        toast('Assistant created', 'ok');
+        document.getElementById('assistantNameField').value = '';
+        document.getElementById('assistantRoleField').value = '';
+        document.getElementById('assistantDescField').value = '';
+        document.getElementById('assistantAvatarField').value = '';
+        ModalManager.close('assistantModal');
+      };
+
+      // Tag Modal
+      document.getElementById('tagModalOk').onclick = () => {
+        const name = document.getElementById('tagNameField').value.trim();
+        const description = document.getElementById('tagDescField').value.trim();
+        const editId = document.getElementById('tagEditId').value;
+        
+        if (!name || !description) {
+          toast('Please enter both name and description', 'err');
+          return;
+        }
+        
+        if (editId) {
+          // Update existing tag
+          const index = this.data.tags.findIndex(t => t.id === editId);
+          if (index >= 0) {
+            this.data.tags[index].name = name;
+            this.data.tags[index].description = description;
+            this.data.tags[index].updated = Date.now();
+            this.save('tags');
+            this.renderTags();
+            toast('Tag updated', 'ok');
+          }
+        } else {
+          // Create new tag
+          if (this.data.tags.find(t => t.name.toLowerCase() === name.toLowerCase())) {
+            toast('Tag already exists', 'err');
+            return;
+          }
+          const tag = { id: Date.now().toString(), name, description, created: Date.now(), updated: Date.now() };
+          this.data.tags.push(tag);
+          this.save('tags');
+          this.renderTags();
+          toast('Tag created', 'ok');
+        }
+        
+        document.getElementById('tagNameField').value = '';
+        document.getElementById('tagDescField').value = '';
+        document.getElementById('tagEditId').value = '';
+        document.getElementById('tagModalTitle').textContent = 'New Tag';
+        document.getElementById('tagModalOk').textContent = 'Create';
+        ModalManager.close('tagModal');
+      };
+
+      // Delete Modal
+      document.getElementById('deleteModalOk').onclick = () => {
+        const callback = ModalManager.callbacks['deleteModal'];
+        if (callback) callback();
+        ModalManager.close('deleteModal');
+      };
+
+      // Enter key in modals
+      ['projectModal', 'tagModal', 'chatNameModal'].forEach(id => {
+        const modal = document.getElementById(id);
+        const input = modal.querySelector('input');
+        if (input) {
+          input.onkeydown = (e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              modal.querySelector('.btn-primary').click();
+            }
+          };
+        }
+      });
+    },
+
+    openPanel(section) {
+      const panelsContainer = document.getElementById('sectionPanels');
+      const panels = document.querySelectorAll('.panel');
+      const targetPanel = document.getElementById(section + 'Panel');
+
+      if (!targetPanel) return;
+
+      if (this.currentPanel === section) {
+        this.closePanel();
+        return;
+      }
+
+      panels.forEach(p => p.classList.remove('active'));
+      targetPanel.classList.add('active');
+      panelsContainer.classList.add('active');
+      this.currentPanel = section;
+
+      this.renderPanel(section);
+    },
+
+    closePanel() {
+      const panelsContainer = document.getElementById('sectionPanels');
+      panelsContainer.classList.remove('active');
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      this.currentPanel = null;
+    },
+
+    renderAll() {
+      this.renderProjects();
+      this.renderFavorites();
+      this.renderAssistants();
+      this.renderTags();
+      this.renderSettings();
+    },
+
+    renderPanel(section) {
+      switch(section) {
+        case 'projects': this.renderProjects(); break;
+        case 'favorites': this.renderFavorites(); break;
+        case 'assistants': this.renderAssistants(); break;
+        case 'tags': this.renderTags(); break;
+        case 'settings': this.renderSettings(); break;
+      }
+    },
+
+    // Projects
+    renderProjects() {
+      const list = document.getElementById('projectsList');
+      const empty = document.getElementById('projectsEmpty');
+      const projects = this.data.projects;
+
+      if (projects.length === 0) {
+        list.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+
+  empty.classList.add('hidden');
+  list.innerHTML = projects.map(p => {
+    const chatCount = p.chatIds ? p.chatIds.length : 0;
+    const maxChats = 10;
+    return `
+    <div class="project-item" onclick="PanelManager.openProject('${p.id}')">
+      <div class="project-icon">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M3 7v10h14V7M3 7l7-4 7 4M3 7l7 4 7-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="project-info">
+        <div class="project-name">${this.escapeHtml(p.name)}</div>
+        <div class="project-stats">${chatCount}/${maxChats} chats ${p.updated ? 'Updated ' + this.timeAgo(p.updated) : ''}</div>
+      </div>
+      <div class="project-menu-wrapper">
+        <button class="panel-item-btn project-menu-btn" onclick="event.stopPropagation(); PanelManager.toggleProjectMenu(event, '${p.id}')">
+          <svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="3" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="8" cy="13" r="1.5"/></svg>
+        </button>
+        <div class="project-dropdown hidden" id="projectMenu-${p.id}">
+          <button class="dropdown-item" onclick="event.stopPropagation(); PanelManager.editProject('${p.id}')">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M11 3l2 2-7 7H4v-2l7-7z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Edit
+          </button>
+          <button class="dropdown-item dropdown-item-danger" onclick="event.stopPropagation(); PanelManager.deleteProject('${p.id}')">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M2 4h12M5 4V3h6v1M6 7v4M10 7v4M3 4l1 9a1 1 0 001 .9h6a1 1 0 001-.9l1-9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  `}).join('');
+},
+    renderKnowledge() {
+      const list = document.getElementById('knowledgeList');
+      const empty = document.getElementById('knowledgeEmpty');
+      const knowledge = this.data.knowledge;
+
+      if (knowledge.length === 0) {
+        list.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+
+  empty.classList.add('hidden');
+  list.innerHTML = knowledge.map(k => {
+    const textBlock = k.blocks?.find(b => b.type === 'text');
+    const hasImage = k.blocks?.some(b => b.type === 'image');
+    const hasFile = k.blocks?.some(b => b.type === 'file');
+    const previewText = textBlock ? textBlock.content.substring(0, 80) + (textBlock.content.length > 80 ? '...' : '') : '';
+    
+    return `
+    <div class="note-card" id="note-${k.id}">
+      <div class="note-header" onclick="PanelManager.viewKnowledge('${k.id}')">
+        <div class="note-title">${this.escapeHtml(k.title)}</div>
+        <div class="note-meta">
+          <span>${this.timeAgo(k.created)}</span>
+          ${hasImage ? '<span class="note-badge image"><svg viewBox="0 0 12 12" fill="none"><rect x="1" y="2" width="10" height="8" rx="1" stroke="currentColor" stroke-width="1"/><circle cx="3" cy="3" r=".5" fill="currentColor"/></svg></span>' : ''}
+          ${hasFile ? '<span class="note-badge file"><svg viewBox="0 0 12 12" fill="none"><path d="M6 1v4h4M5 1H3v10h6V5L5 1z" stroke="currentColor" stroke-width="1"/></svg></span>' : ''}
+          <span class="note-badge">${k.blocks?.length || 0} items</span>
+        </div>
+      </div>
+      ${previewText ? `<div class="note-preview" onclick="PanelManager.viewKnowledge('${k.id}')">${this.escapeHtml(previewText)}</div>` : ''}
+      <div class="note-actions">
+        <button class="note-btn" onclick="event.stopPropagation(); PanelManager.copyNoteContent('${k.id}')" title="Copy">
+          <svg viewBox="0 0 14 14" fill="none"><rect x="2" y="2" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M4 4h8v8H4V4z" stroke="currentColor" stroke-width="1.2"/></svg>
+          Copy
+        </button>
+        <button class="note-btn" onclick="event.stopPropagation(); PanelManager.editKnowledge('${k.id}')" title="Edit">
+          <svg viewBox="0 0 14 14" fill="none"><path d="M10 2l2 2-7 7H3v-2l7-7z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Edit
+        </button>
+        <button class="note-btn delete" onclick="event.stopPropagation(); PanelManager.deleteKnowledge('${k.id}')" title="Delete">
+          <svg viewBox="0 0 14 14" fill="none"><path d="M2 3h10M4 3V2h6v1M5 6v5M9 6v5M3 3l1 9a1 1 0 001 .9h4a1 1 0 001-.9l1-9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          Delete
+        </button>
+      </div>
+    </div>
+  `}).join('');
+    },
+
+    addKnowledge() {
+      ModalManager.open('knowledgeModal');
+      setTimeout(() => this.addKnowledgeBlock('text'), 100);
+    },
+
+    addKnowledgeBlock(type) {
+      const container = document.getElementById('knowledgeBlocks');
+      const blockId = 'block_' + Date.now();
+      let blockHtml = '';
+      if (type === 'text') {
+        blockHtml = `<div class="knowledge-block" data-type="text" id="${blockId}"><div class="block-header"><span class="block-label">Text</span><button type="button" class="block-remove" onclick="PanelManager.removeKnowledgeBlock('${blockId}')">×</button></div><textarea class="modal-field block-textarea" placeholder="Enter text..." rows="3"></textarea></div>`;
+      } else if (type === 'image') {
+        blockHtml = `<div class="knowledge-block" data-type="image" id="${blockId}"><div class="block-header"><span class="block-label">Image</span><button type="button" class="block-remove" onclick="PanelManager.removeKnowledgeBlock('${blockId}')">×</button></div><input type="file" id="img_${blockId}" accept="image/*" class="hidden" onchange="PanelManager.handleImageUpload(this, '${blockId}')"><div class="block-image-preview" id="preview_${blockId}"><button type="button" class="upload-btn" onclick="document.getElementById('img_${blockId}').click()">Upload Image</button></div></div>`;
+      } else if (type === 'file') {
+        blockHtml = `<div class="knowledge-block" data-type="file" id="${blockId}"><div class="block-header"><span class="block-label">File</span><button type="button" class="block-remove" onclick="PanelManager.removeKnowledgeBlock('${blockId}')">×</button></div><input type="file" id="file_${blockId}" class="hidden" onchange="PanelManager.handleFileUpload(this, '${blockId}')"><div class="file-preview-area" id="filePreview_${blockId}"><button type="button" class="upload-btn" onclick="document.getElementById('file_${blockId}').click()">Upload File</button></div></div>`;
+      }
+      container.insertAdjacentHTML('beforeend', blockHtml);
+    },
+
+    removeKnowledgeBlock(blockId) {
+      const block = document.getElementById(blockId);
+      if (block) block.remove();
+    },
+
+    handleImageUpload(input, blockId) {
+      const file = input.files[0];
+      if (!file) return;
+      if (file.size > 5 * 1024 * 1024) { toast('Image too large (max 5MB)', 'err'); return; }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        document.getElementById('preview_' + blockId).innerHTML = `<img src="${e.target.result}" alt="${file.name}">`;
+        document.getElementById(blockId).dataset.name = file.name;
+      };
+      reader.readAsDataURL(file);
+    },
+
+    handleFileUpload(input, blockId) {
+      const file = input.files[0];
+      if (!file) return;
+      if (file.size > 10 * 1024 * 1024) { toast('File too large (max 10MB)', 'err'); return; }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const sizeStr = file.size < 1024 ? file.size + ' B' : file.size < 1024 * 1024 ? (file.size / 1024).toFixed(1) + ' KB' : (file.size / (1024 * 1024)).toFixed(1) + ' MB';
+        document.getElementById('filePreview_' + blockId).innerHTML = `<div class="file-preview-item"><div class="file-name">${file.name}</div><div class="file-size">${sizeStr}</div></div>`;
+        const block = document.getElementById(blockId);
+        block.dataset.fileData = e.target.result;
+        block.dataset.fileName = file.name;
+        block.dataset.fileSize = sizeStr;
+      };
+      reader.readAsDataURL(file);
+    },
+
+    resetKnowledgeModal() {
+      document.getElementById('knowledgeTitleField').value = '';
+      document.getElementById('knowledgeBlocks').innerHTML = '';
+      this.editingKnowledgeId = null;
+    },
+
+    copyNoteContent(id) {
+      const note = this.data.knowledge.find(k => k.id === id);
+      if (!note) return;
+      const textParts = note.blocks?.filter(b => b.type === 'text').map(b => b.content) || [];
+      if (textParts.length > 0) { navigator.clipboard.writeText(textParts.join('\n\n')); toast('Copied', 'ok'); }
+    },
+
+    editKnowledge(id) {
+      const note = this.data.knowledge.find(k => k.id === id);
+      if (!note) return;
+      this.editingKnowledgeId = id;
+      document.getElementById('knowledgeTitleField').value = note.title;
+      const container = document.getElementById('knowledgeBlocks');
+      container.innerHTML = '';
+      if (note.blocks) {
+        note.blocks.forEach(block => {
+          if (block.type === 'text') {
+            this.addKnowledgeBlock('text');
+            container.lastElementChild.querySelector('.block-textarea').value = block.content;
+          } else if (block.type === 'image') {
+            this.addKnowledgeBlock('image');
+            container.lastElementChild.querySelector('.block-image-preview').innerHTML = `<img src="${block.data}" alt="${block.name}">`;
+            container.lastElementChild.dataset.name = block.name;
+          } else if (block.type === 'file') {
+            this.addKnowledgeBlock('file');
+            const fileBlock = container.lastElementChild;
+            fileBlock.dataset.fileData = block.data;
+            fileBlock.dataset.fileName = block.name;
+            fileBlock.dataset.fileSize = block.size;
+            fileBlock.querySelector('.file-preview-area').innerHTML = `<div class="file-preview-item"><div class="file-name">${block.name}</div><div class="file-size">${block.size}</div></div>`;
+          }
+        });
+      }
+      ModalManager.open('knowledgeModal');
+    },
+
+    deleteKnowledge(id) {
+      ModalManager.showDelete('Delete note?', 'This note will be permanently removed.', () => {
+        this.data.knowledge = this.data.knowledge.filter(k => k.id !== id);
+        this.save('knowledge');
+        this.renderKnowledge();
+        toast('Note deleted', 'ok');
+      });
+    },
+
+    removeFavorite(id) {
+      ModalManager.showDelete('Remove from favorites?', 'This item will be removed from your favorites.', () => {
+        this.data.favorites = this.data.favorites.filter(f => f.id !== id);
+        this.save('favorites');
+        this.renderFavorites();
+        toast('Removed from favorites', 'ok');
+      });
+    },
+
+    // Favorites
+    renderFavorites() {
+      const list = document.getElementById('favoritesList');
+      const empty = document.getElementById('favoritesEmpty');
+      const favorites = this.data.favorites;
+
+      if (favorites.length === 0) {
+        list.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+
+      empty.classList.add('hidden');
+      list.innerHTML = favorites.map(f => `
+        <div class="panel-item" onclick="PanelManager.loadFavorite('${f.id}')">
+          <div class="panel-item-icon" style="background: rgba(251, 146, 60, .1);">
+            <svg viewBox="0 0 20 20" fill="none" style="stroke: #fb923c;"><path d="M10 2l2.5 5.5L18 8l-4 4 1 5.5L10 14l-5 3.5L6 12 2 8l5.5-.5L10 2z" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="panel-item-info">
+            <div class="panel-item-title">${this.escapeHtml(f.title)}</div>
+            <div class="panel-item-meta">${this.timeAgo(f.saved)}</div>
+          </div>
+          <div class="panel-item-actions">
+            <button class="panel-item-btn" onclick="event.stopPropagation(); PanelManager.removeFavorite('${f.id}')">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M2 4h12M5 4V3h6v1M6 7v4M10 7v4M3 4l1 9a1 1 0 001 .9h6a1 1 0 001-.9l1-9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    },
+
+    // Assistants
+    renderAssistants() {
+      const list = document.getElementById('assistantsList');
+      const empty = document.getElementById('assistantsEmpty');
+      const assistants = this.data.assistants;
+
+      if (assistants.length === 0) {
+        list.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+
+      empty.classList.add('hidden');
+      list.innerHTML = assistants.map(a => `
+        <div class="assistant-card" onclick="PanelManager.useAssistant('${a.id}')">
+          <div class="assistant-avatar">${a.avatar || '🤖'}</div>
+          <div class="assistant-info">
+            <div class="assistant-name">${this.escapeHtml(a.name)}</div>
+            <div class="assistant-role">${this.escapeHtml(a.role)}</div>
+          </div>
+          <div class="panel-item-actions">
+            <button class="panel-item-btn" onclick="event.stopPropagation(); PanelManager.deleteAssistant('${a.id}')">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M2 4h12M5 4V3h6v1M6 7v4M10 7v4M3 4l1 9a1 1 0 001 .9h6a1 1 0 001-.9l1-9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    },
+
+    deleteAssistant(id) {
+      ModalManager.showDelete('Delete assistant?', 'This assistant will be permanently removed.', () => {
+        this.data.assistants = this.data.assistants.filter(a => a.id !== id);
+        this.save('assistants');
+        this.renderAssistants();
+        toast('Assistant deleted', 'ok');
+      });
+    },
+
+    // History
+    renderHistory() {
+      const list = document.getElementById('historyPanelList');
+      const empty = document.getElementById('historyEmpty');
+      const history = this.data.history;
+
+      if (history.length === 0) {
+        list.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+
+      empty.classList.add('hidden');
+      list.innerHTML = history.map(h => `
+        <div class="panel-item" onclick="PanelManager.loadHistoryChat('${h.id}')">
+          <div class="panel-item-icon" style="background: rgba(99, 102, 241, .1);">
+            <svg viewBox="0 0 20 20" fill="none" style="stroke: #6366f1;"><circle cx="10" cy="10" r="7" stroke-width="1.5"/><path d="M10 6v4l3 3" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="panel-item-info">
+            <div class="panel-item-title">${this.escapeHtml(h.title || 'Untitled')}</div>
+            <div class="panel-item-meta">${this.timeAgo(h.updated || h.created)}</div>
+          </div>
+          <div class="panel-item-actions">
+            <button class="panel-item-btn" onclick="event.stopPropagation(); PanelManager.favoriteChat('${h.id}')" title="Add to favorites">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M10 2l2.5 5.5L18 8l-4 4 1 5.5L10 14l-5 3.5L6 12 2 8l5.5-.5L10 2z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    },
+
+    // Search
+    searchKnowledge() {
+      const query = document.getElementById('knowledgeSearch').value.toLowerCase();
+      const cards = document.querySelectorAll('.note-card');
+      cards.forEach(card => {
+        const title = card.querySelector('.note-title').textContent.toLowerCase();
+        const preview = card.querySelector('.note-preview')?.textContent.toLowerCase() || '';
+        card.style.display = (title.includes(query) || preview.includes(query)) ? '' : 'none';
+      });
+    },
+
+    searchHistoryPanel() {
+      const query = document.getElementById('historySearch').value.toLowerCase();
+      const items = document.querySelectorAll('#historyPanelList .panel-item');
+      items.forEach(item => {
+        const title = item.querySelector('.panel-item-title').textContent.toLowerCase();
+        item.style.display = title.includes(query) ? '' : 'none';
+      });
+    },
+
+    // Actions
+    createProject() {
+      ModalManager.open('projectModal');
+      setTimeout(() => document.getElementById('projectNameField').focus(), 100);
+    },
+    editProject(id) {
+      const project = this.data.projects.find(p => p.id === id);
+      if (!project) return;
+      const newName = prompt('Edit project name:', project.name);
+      if (newName && newName.trim()) {
+        project.name = newName.trim();
+        project.updated = Date.now();
+        this.save('projects');
+        this.renderProjects();
+        toast('Project updated', 'ok');
+      }
+    },
+    toggleProjectMenu(event, id) {
+      // Close all other open dropdowns
+      document.querySelectorAll('.project-dropdown').forEach(el => {
+        if (el.id !== `projectMenu-${id}`) {
+          el.classList.add('hidden');
+        }
+      });
+      
+      // Toggle current dropdown
+      const dropdown = document.getElementById(`projectMenu-${id}`);
+      if (dropdown) {
+        dropdown.classList.toggle('hidden');
+      }
+      
+      // Close dropdown when clicking outside
+      const closeOnClickOutside = (e) => {
+        if (!e.target.closest('.project-menu-wrapper')) {
+          dropdown?.classList.add('hidden');
+          document.removeEventListener('click', closeOnClickOutside);
+        }
+      };
+      
+      // Delay to avoid immediate close
+      setTimeout(() => {
+        document.addEventListener('click', closeOnClickOutside);
+      }, 0);
+    },
+
+    deleteProject(id) {
+      ModalManager.showDelete('Delete project?', 'This project will be permanently removed.', () => {
+        this.data.projects = this.data.projects.filter(p => p.id !== id);
+        this.save('projects');
+        this.renderProjects();
+        toast('Project deleted', 'ok');
+      });
+    },
+    openProject(id) {
+      const project = this.data.projects.find(p => p.id === id);
+      if (!project) return;
+
+      const maxChats = 10;
+      const chatCount = project.chatIds ? project.chatIds.length : 0;
+
+      // Store project ID for chat operations
+      this.pendingProjectId = id;
+      this.pendingChatCount = chatCount;
+      this.pendingMaxChats = maxChats;
+
+      // Show the project chats modal with existing chats and create option
+      this.renderProjectChats(project, chatCount, maxChats);
+      ModalManager.open('projectChatsModal');
+    },
+
+    // Render project chats in the modal
+    renderProjectChats(project, chatCount, maxChats) {
+      const listEl = document.getElementById('projectChatsList');
+      const emptyEl = document.getElementById('projectChatsEmpty');
+      const limitEl = document.getElementById('projectChatsLimit');
+      const titleEl = document.getElementById('projectChatsTitle');
+      const createBtn = document.getElementById('projectChatsCreateBtn');
+
+      // Update title and limit display
+      titleEl.textContent = `${project.name} - Chats`;
+      limitEl.textContent = `${chatCount}/${maxChats} chats`;
+      limitEl.style.color = chatCount >= maxChats ? 'var(--err, #f87171)' : 'var(--txt3)';
+
+      const chats = project.chatIds || [];
+      const hasChats = chats.length > 0;
+
+      // Update button text: "Start Chat" when empty, "+ New Chat" when has chats
+      if (createBtn) {
+        createBtn.textContent = hasChats ? '+ New Chat' : 'Start Chat';
+        createBtn.disabled = chatCount >= maxChats;
+        createBtn.style.opacity = chatCount >= maxChats ? '0.5' : '1';
+        createBtn.style.cursor = chatCount >= maxChats ? 'not-allowed' : 'pointer';
+      }
+
+      if (!hasChats) {
+        listEl.innerHTML = '';
+        emptyEl.style.display = 'block';
+        return;
+      }
+
+      emptyEl.style.display = 'none';
+
+      // Sort chats by creation date (newest first)
+      const sortedChats = [...chats].sort((a, b) => (b.created || 0) - (a.created || 0));
+
+      listEl.innerHTML = sortedChats.map((chat, index) => {
+        const date = chat.created ? new Date(chat.created).toLocaleDateString() : 'Unknown date';
+        const session = window.S?.sessions?.find(s => s.id === chat.id);
+        const hasMessages = session?.messages?.length > 0;
+        const msgCount = session?.messages?.length || 0;
+
+        return `
+          <div class="project-chat-item" onclick="PanelManager.openProjectChat('${chat.id}')">
+            <div class="chat-item-icon">
+              <svg viewBox="0 0 20 20" fill="none" style="stroke: var(--txt3);">
+                <path d="M2 4v12l3-3h11a1 1 0 001-1V4a1 1 0 00-1-1H3a1 1 0 00-1 1z" stroke-width="1.5"/>
+              </svg>
+            </div>
+            <div class="chat-item-info">
+              <div class="chat-item-name">${this.escapeHtml(chat.name || 'Unnamed Chat')}</div>
+              <div class="chat-item-meta">${date} · ${msgCount} message${msgCount !== 1 ? 's' : ''}</div>
+            </div>
+            <div class="chat-item-arrow">
+              <svg viewBox="0 0 16 16" fill="none" style="stroke: var(--txt3); width: 16px; height: 16px;">
+                <path d="M6 3l5 5-5 5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        `;
+      }).join('');
+    },
+
+    // Open an existing project chat
+    openProjectChat(chatId) {
+      const project = this.data.projects.find(p => p.id === this.pendingProjectId);
+      if (!project) return;
+
+      const chat = project.chatIds?.find(c => c.id === chatId);
+      if (!chat) return;
+
+      ModalManager.close('projectChatsModal');
+
+      // Switch to the existing session
+      if (window.S?.sessions?.find(s => s.id === chatId)) {
+        window.switchSession?.(chatId);
+      }
+
+      // Show project UI
+      this.showProjectUI(project, chat.name);
+    },
+
+    // Create new chat button clicked in modal
+    createNewProjectChat() {
+      if (this.pendingChatCount >= this.pendingMaxChats) {
+        toast(`Maximum ${this.pendingMaxChats} chats reached for this project`, 'err');
+        return;
+      }
+
+      ModalManager.close('projectChatsModal');
+
+      // Open the chat name modal
+      document.getElementById('chatNameField').value = '';
+      ModalManager.open('chatNameModal');
+      setTimeout(() => document.getElementById('chatNameField').focus(), 100);
+    },
+
+    // Show project UI (tabs, header, etc.)
+    showProjectUI(project, chatName) {
+      // Collapse sidebar for immersive project experience
+      const sidebar = document.querySelector('.sidebar');
+      if (sidebar) sidebar.classList.add('collapsed');
+      document.body.classList.add('project-mode');
+
+      // Close any open panels
+      this.closePanel();
+
+      // Show project tabs
+      const tabs = document.getElementById('projectTabs');
+      if (tabs) {
+        tabs.classList.remove('hidden');
+        const chatTabName = document.getElementById('chatTabName');
+        if (chatTabName) chatTabName.textContent = `${project.name} Chat`;
+      }
+
+      // Show project name in header
+      const topbarTitle = document.getElementById('topbarTitle');
+      if (topbarTitle) {
+        topbarTitle.textContent = project.name;
+        topbarTitle.dataset.projectId = project.id;
+      }
+
+      // Switch to chat tab
+      this.switchTab('chat');
+
+      toast(`${chatName} opened in "${project.name}"`, 'ok');
+    },
+    
+    // Called when user confirms chat name in modal
+    confirmChatName() {
+      const chatName = document.getElementById('chatNameField').value.trim();
+      if (!chatName) {
+        toast('Please enter a chat name', 'err');
+        return;
+      }
+      
+      const project = this.data.projects.find(p => p.id === this.pendingProjectId);
+      if (!project) return;
+      
+      ModalManager.close('chatNameModal');
+      this.completeProjectOpen(project, chatName, this.pendingChatCount, this.pendingMaxChats, this.pendingChatId);
+    },
+    
+    // Complete opening project after getting chat name
+    completeProjectOpen(project, chatName, chatCount, maxChats, actualChatId) {
+      // Close modals
+      ModalManager.close('chatNameModal');
+      ModalManager.close('projectChatsModal');
+      
+      // Use provided chat ID or fallback
+      const chatId = actualChatId || this.pendingChatId || Date.now().toString();
+      
+      // Show project tabs
+      const tabs = document.getElementById('projectTabs');
+      if (tabs) {
+        tabs.classList.remove('hidden');
+        // Update chat tab name with project name
+        const chatTabName = document.getElementById('chatTabName');
+        if (chatTabName) chatTabName.textContent = `${project.name} Chat`;
+      }
+      
+      // Show project name in header
+      const topbarTitle = document.getElementById('topbarTitle');
+      if (topbarTitle) {
+        topbarTitle.textContent = project.name;
+        topbarTitle.dataset.projectId = project.id;
+      }
+      
+      // Switch to chat tab
+      this.switchTab('chat');
+      
+      // Check if current session has content (both user and AI messages)
+      const currentSession = window.S?.sessions?.find(s => s.id === window.S?.currentId);
+      const hasUserMessage = currentSession?.messages?.some(m => m.role === 'user');
+      const hasAIMessage = currentSession?.messages?.some(m => m.role === 'ai');
+      const shouldCreateNewChat = hasUserMessage && hasAIMessage;
+      
+      let finalChatId;
+      if (shouldCreateNewChat) {
+        // Create new session if current has content
+        if (typeof window.newSession === 'function') {
+          window.newSession();
+          finalChatId = window.S?.currentId;
+        }
+      } else {
+        // Use current empty session
+        finalChatId = window.S?.currentId;
+        // Clear any partial messages
+        if (currentSession) {
+          currentSession.messages = [];
+        }
+      }
+      
+      if (finalChatId) {
+        // Store chat with ID and name in project (use finalChatId which matches the session)
+        if (!project.chatIds) project.chatIds = [];
+        project.chatIds.push({
+          id: finalChatId,
+          name: chatName,
+          created: Date.now()
+        });
+        project.updated = Date.now();
+        this.save('projects');
+        this.renderProjects();
+        
+        // Update chat title in session with the chat name (not "Project: name")
+        const session = window.S?.sessions?.find(s => s.id === finalChatId);
+        if (session) {
+          session.title = chatName; // Use the chat name user entered
+          session.projectId = project.id;
+          session.projectName = project.name; // Store project name separately
+          window.persist();
+          window.renderHistory(); // Refresh history to show new name
+        }
+        
+        // Slide in the project panel to show chat info
+        this.showProjectPanel(project, chatName, finalChatId);
+        
+        toast(`${chatName} started in "${project.name}" (${chatCount + 1}/${maxChats})`, 'ok');
+      } else {
+        toast('Chat system not available', 'err');
+      }
+      
+      // Clear pending state
+      this.pendingProjectId = null;
+      this.pendingChatCount = null;
+      this.pendingMaxChats = null;
+    },
+    
+    // Show slide-in project panel
+    showProjectPanel(project, chatName, chatId) {
+      const overlay = document.getElementById('projectPanelOverlay');
+      const panel = document.getElementById('projectPanel');
+      const title = document.getElementById('projectPanelTitle');
+      const content = document.getElementById('projectPanelContent');
+      
+      if (overlay && panel) {
+        // Update panel content
+        if (title) title.textContent = project.name;
+        if (content) {
+          content.innerHTML = `
+            <div class="project-panel-info">
+              <div class="panel-info-item">
+                <span class="panel-info-label">Current Chat</span>
+                <span class="panel-info-value">${this.escapeHtml(chatName)}</span>
+              </div>
+              <div class="panel-info-item">
+                <span class="panel-info-label">Chat ID</span>
+                <span class="panel-info-value" style="font-size: 0.75rem; opacity: 0.7;">${chatId.slice(-8)}</span>
+              </div>
+              <div class="panel-info-item">
+                <span class="panel-info-label">Total Chats</span>
+                <span class="panel-info-value">${project.chatIds?.length || 1}/10</span>
+              </div>
+            </div>
+          `;
+        }
+        
+        // Slide in
+        overlay.classList.add('active');
+        panel.classList.add('active');
+        
+        // Auto-close after 3 seconds
+        setTimeout(() => this.hideProjectPanel(), 3000);
+      }
+    },
+    
+    // Hide slide-in project panel
+    hideProjectPanel() {
+      const overlay = document.getElementById('projectPanelOverlay');
+      const panel = document.getElementById('projectPanel');
+      if (overlay) overlay.classList.remove('active');
+      if (panel) panel.classList.remove('active');
+    },
+    
+    switchTab(tabName) {
+      // Update tab buttons
+      document.querySelectorAll('.project-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.tab === tabName);
+      });
+      
+      // Tab content switching is handled by the tab's onclick handler
+      // This function just manages the active state of tab buttons
+    },
+    
+    closeProjectTabs() {
+      // Hide tabs
+      const tabs = document.getElementById('projectTabs');
+      if (tabs) tabs.classList.add('hidden');
+      
+      // Show sidebar again when closing project
+      const sidebar = document.querySelector('.sidebar');
+      if (sidebar) sidebar.classList.remove('collapsed');
+      document.body.classList.remove('project-mode');
+      
+      // Reset header
+      const topbarTitle = document.getElementById('topbarTitle');
+      if (topbarTitle) {
+        topbarTitle.textContent = 'AriaGPT';
+        delete topbarTitle.dataset.projectId;
+      }
+      
+      // Clear project-specific data
+      this.currentProjectId = null;
+      
+      // Switch to regular chat view
+      this.switchTab('chat');
+      toast('Returned to main chat', 'info');
+    },
+    
+    createAssistant() {
+      ModalManager.open('assistantModal');
+    },
+    loadFavorite(id) { toast('Loading favorite chat...', 'info'); },
+    useAssistant(id) { 
+      const a = this.data.assistants.find(x => x.id === id);
+      if (a) toast('Using assistant: ' + a.name, 'ok');
+    },
+    loadHistoryChat(id) { toast('Loading chat...', 'info'); },
+    favoriteChat(id) {
+      const chat = this.data.history.find(h => h.id === id);
+      if (chat && !this.data.favorites.find(f => f.id === id)) {
+        this.data.favorites.push({ ...chat, saved: Date.now() });
+        this.save('favorites');
+        toast('Added to favorites', 'ok');
+      }
+    },
+
+    // Templates
+    renderTemplates() {
+      const list = document.getElementById('templatesList');
+      const empty = document.getElementById('templatesEmpty');
+      const templates = this.data.templates;
+
+      if (templates.length === 0) {
+        list.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+
+      empty.classList.add('hidden');
+      list.innerHTML = templates.map(t => `
+        <div class="template-card" onclick="PanelManager.useTemplate('${t.id}')">
+          <div class="template-header">
+            <div class="template-icon">
+              <svg viewBox="0 0 20 20" fill="none"><path d="M4 4h12v12l-6 3-6-3V4z" stroke="url(#ti)" stroke-width="1.5"/><path d="M8 8h8M8 11h6M8 14h4" stroke="url(#ti)" stroke-width="1.2" stroke-linecap="round"/><defs><linearGradient id="ti" x1="2" y1="2" x2="18" y2="18"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#6366f1"/></linearGradient></defs></svg>
+            </div>
+            <div class="template-name">${this.escapeHtml(t.name)}</div>
+          </div>
+          <div class="template-content">${this.escapeHtml(t.content.substring(0, 120))}</div>
+        </div>
+      `).join('');
+    },
+
+    // Tags
+    renderTags() {
+      const list = document.getElementById('tagsList');
+      const empty = document.getElementById('tagsEmpty');
+      const tags = this.data.tags;
+
+      if (tags.length === 0) {
+        list.innerHTML = '';
+        empty.classList.remove('hidden');
+        document.getElementById('taggedChatsSection').style.display = 'none';
+        return;
+      }
+
+      empty.classList.add('hidden');
+      list.innerHTML = tags.map(t => {
+        const previewText = t.description ? t.description.substring(0, 120) + (t.description.length > 120 ? '...' : '') : '';
+        return `
+        <div class="tag-card" id="tag-${t.id}">
+          <div class="tag-header">
+            <span class="tag-name">${this.escapeHtml(t.name)}</span>
+            <span class="tag-time">${this.timeAgo(t.updated || t.created)}</span>
+          </div>
+          <div class="tag-preview" title="${this.escapeHtml(t.description)}">${this.escapeHtml(previewText)}</div>
+          <div class="tag-actions">
+            <button class="tag-btn tag-insert" onclick="PanelManager.insertTag('${t.id}')" title="Insert into chat">
+              <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2v10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              Insert
+            </button>
+            <button class="tag-btn tag-edit" onclick="PanelManager.editTag('${t.id}')" title="Edit tag">
+              <svg viewBox="0 0 14 14" fill="none"><path d="M10 2l2 2-7 7H3v-2l7-7z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Edit
+            </button>
+            <button class="tag-btn tag-delete-btn" onclick="PanelManager.deleteTag('${t.id}')" title="Delete tag">
+              <svg viewBox="0 0 14 14" fill="none"><path d="M2 3h10M4 3V2h6v1M5 6v5M9 6v5M3 3l1 9a1 1 0 001 .9h4a1 1 0 001-.9l1-9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              Delete
+            </button>
+          </div>
+        </div>
+      `}).join('');
+    },
+
+    insertTag(id) {
+      const tag = this.data.tags.find(t => t.id === id);
+      if (tag) {
+        const msgInput = document.getElementById('msgInput');
+        const currentValue = msgInput.value;
+        const cursorPos = msgInput.selectionStart || currentValue.length;
+        const newValue = currentValue.slice(0, cursorPos) + tag.description + currentValue.slice(cursorPos);
+        msgInput.value = newValue;
+        msgInput.focus();
+        msgInput.setSelectionRange(cursorPos + tag.description.length, cursorPos + tag.description.length);
+        this.closePanel();
+        toast(`Tag "${tag.name}" inserted`, 'ok');
+      }
+    },
+
+    editTag(id) {
+      const tag = this.data.tags.find(t => t.id === id);
+      if (tag) {
+        document.getElementById('tagNameField').value = tag.name;
+        document.getElementById('tagDescField').value = tag.description;
+        document.getElementById('tagEditId').value = tag.id;
+        document.getElementById('tagModalTitle').textContent = 'Edit Tag';
+        document.getElementById('tagModalOk').textContent = 'Update';
+        ModalManager.open('tagModal');
+      }
+    },
+
+    // Templates CRUD
+    createTemplate() {
+      ModalManager.open('templateModal');
+    },
+
+    useTemplate(id) {
+      const template = this.data.templates.find(t => t.id === id);
+      if (template) {
+        const msgInput = document.getElementById('msgInput');
+        msgInput.value = template.content;
+        msgInput.focus();
+        this.closePanel();
+        toast('Template inserted', 'ok');
+      }
+    },
+
+    searchTemplates() {
+      const query = document.getElementById('templatesSearch').value.toLowerCase();
+      const cards = document.querySelectorAll('.template-card');
+      cards.forEach(card => {
+        const name = card.querySelector('.template-name').textContent.toLowerCase();
+        const content = card.querySelector('.template-content').textContent.toLowerCase();
+        card.style.display = (name.includes(query) || content.includes(query)) ? '' : 'none';
+      });
+    },
+
+    // Tags CRUD
+    createTag() {
+      ModalManager.open('tagModal');
+    },
+
+    deleteTag(id) {
+      ModalManager.showDelete('Delete tag?', 'This tag will be permanently removed.', () => {
+        this.data.tags = this.data.tags.filter(t => t.id !== id);
+        this.save('tags');
+        this.renderTags();
+        toast('Tag deleted', 'ok');
+      });
+    },
+
+    selectTag(id) {
+      const tag = this.data.tags.find(t => t.id === id);
+      if (!tag) return;
+      
+      document.querySelectorAll('.tag-item').forEach(t => t.classList.remove('active'));
+      document.getElementById('tag-' + id).classList.add('active');
+      
+      const section = document.getElementById('taggedChatsSection');
+      const title = document.getElementById('selectedTagName');
+      const list = document.getElementById('taggedChatsList');
+      
+      title.textContent = `Chats tagged "${this.escapeHtml(tag.name)}"`;
+      
+      if (!tag.chats || tag.chats.length === 0) {
+        list.innerHTML = '<div class="panel-empty" style="padding: 20px;"><span>No chats with this tag</span></div>';
+      } else {
+        list.innerHTML = tag.chats.map(chatId => {
+          const chat = this.data.history.find(h => h.id === chatId);
+          if (!chat) return '';
+          return `
+            <div class="panel-item" onclick="PanelManager.loadHistoryChat('${chat.id}')">
+              <div class="panel-item-info">
+                <div class="panel-item-title">${this.escapeHtml(chat.title || 'Untitled')}</div>
+                <div class="panel-item-meta">${this.timeAgo(chat.updated || chat.created)}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+      
+      section.style.display = 'block';
+    },
+
+    renderSettings() {
+      const settings = this.data.settings;
+      document.getElementById('themeSelect').value = settings.theme || 'dark';
+      document.getElementById('compactMode').checked = settings.compactMode || false;
+      document.getElementById('autoSave').checked = settings.autoSave !== false;
+      document.getElementById('codeWrap').checked = settings.codeWrap || false;
+      document.getElementById('streamMode').checked = settings.streamMode !== false;
+    },
+
+    // Settings Functions
+    changeTheme(value) {
+      this.data.settings.theme = value;
+      this.save('settings');
+      document.documentElement.setAttribute('data-theme', value === 'auto' ? 'dark' : value);
+      toast('Theme updated', 'ok');
+    },
+
+    toggleCompact(checked) {
+      this.data.settings.compactMode = checked;
+      this.save('settings');
+      document.body.classList.toggle('compact-mode', checked);
+      toast(checked ? 'Compact mode enabled' : 'Compact mode disabled', 'ok');
+    },
+
+    toggleSetting(key, value) {
+      this.data.settings[key] = value;
+      this.save('settings');
+    },
+
+    save(key) {
+      localStorage.setItem(getUserKey(key), JSON.stringify(this.data[key]));
+    },
+
+    escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    },
+
+    timeAgo(timestamp) {
+      const seconds = Math.floor((Date.now() - timestamp) / 1000);
+      if (seconds < 60) return 'just now';
+      const minutes = Math.floor(seconds / 60);
+      if (minutes < 60) return minutes + 'm ago';
+      const hours = Math.floor(minutes / 60);
+      if (hours < 24) return hours + 'h ago';
+      const days = Math.floor(hours / 24);
+      return days + 'd ago';
+    }
+  };
+
+  // Close panel function for onclick handlers
+  window.closePanel = function() {
+    PanelManager.closePanel();
+  };
+
+  // Global functions for onclick handlers
+  window.createProject = () => PanelManager.createProject();
+  window.addKnowledge = () => PanelManager.addKnowledge();
+  window.createAssistant = () => PanelManager.createAssistant();
+  window.searchKnowledge = () => PanelManager.searchKnowledge();
+  window.searchHistoryPanel = () => PanelManager.searchHistoryPanel();
+  window.createTemplate = () => PanelManager.createTemplate();
+  window.searchTemplates = () => PanelManager.searchTemplates();
+  window.createTag = () => PanelManager.createTag();
+  window.changeTheme = (v) => PanelManager.changeTheme(v);
+  window.toggleCompact = (v) => PanelManager.toggleCompact(v);
+  window.toggleSetting = (k, v) => PanelManager.toggleSetting(k, v);
+  window.exportAllData = () => {
+    const data = {
+      projects: PanelManager.data.projects,
+      knowledge: PanelManager.data.knowledge,
+      favorites: PanelManager.data.favorites,
+      assistants: PanelManager.data.assistants,
+      templates: PanelManager.data.templates,
+      tags: PanelManager.data.tags,
+      settings: PanelManager.data.settings,
+      history: JSON.parse(localStorage.getItem(getUserKey('chat_history')) || '[]')
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ariagpt-export-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('Data exported', 'ok');
+  };
+  window.clearAllData = () => {
+    ModalManager.showDelete('Clear all data?', 'All your projects, knowledge, favorites, assistants, templates, tags, and settings will be permanently deleted. This cannot be undone.', () => {
+      // Remove user-specific data
+      const keys = ['projects', 'knowledge', 'favorites', 'assistants', 'templates', 'tags', 'settings', 'chat_history'];
+      keys.forEach(key => localStorage.removeItem(getUserKey(key)));
+      // Also clear chat sessions from script.js
+      localStorage.removeItem(getUserKey('v3'));
+      location.reload();
+    });
+  };
+  window.showToast = (msg, type) => toast(msg, type);
+  window.ModalManager = ModalManager;
+  window.PanelManager = PanelManager;
+
+  // Info Panel System
+  const InfoPanelManager = {
+    data: {
+      projects: {
+        title: 'Projects',
+        whatIs: 'Projects help you organize your conversations into focused workspaces. Think of them like folders where you can group related chats together. Each project can contain multiple conversations, making it easy to keep your work separated by topic, client, or purpose.',
+        howToUse: [
+          'Click "New Project" to create a workspace',
+          'Give your project a meaningful name',
+          'Start chats within that project context',
+          'Access all project chats from the Projects panel',
+          'Edit or delete projects anytime',
+          'Projects help you stay organized across different topics or clients'
+        ]
+      },
+      knowledge: {
+        title: 'Saved Knowledge',
+        whatIs: 'Saved Knowledge is your personal knowledge base where you can store important information, code snippets, reference materials, images, and files. It acts like a digital notebook that persists across all your conversations, allowing you to quickly access and reuse important content.',
+        howToUse: [
+          'Click "Add Knowledge" to create a new note',
+          'Add a descriptive title to your note',
+          'Include text blocks, images, or file attachments',
+          'Notes are automatically saved and searchable',
+          'Copy note content to use in conversations',
+          'Edit or delete notes as needed',
+          'Use notes to store frequently used code, prompts, or reference data'
+        ]
+      },
+      favorites: {
+        title: 'Favorites',
+        whatIs: 'Favorites lets you bookmark important conversations for quick access. When you star a chat, it gets added to your favorites list so you can easily find and return to it later without scrolling through your entire chat history.',
+        howToUse: [
+          'While viewing any chat, click the star icon to favorite it',
+          'Access all starred chats from the Favorites panel',
+          'Click a favorite to instantly load that conversation',
+          'Remove items from favorites by clicking the delete button',
+          'Favorites persist across sessions',
+          'Use favorites for important conversations you reference often'
+        ]
+      },
+      assistants: {
+        title: 'My Assistants',
+        whatIs: 'My Assistants allows you to create custom AI assistants with specialized personalities and expertise. You can configure assistants for specific roles like "Code Reviewer," "Creative Writer," or "Technical Expert" - each with their own behavior and focus.',
+        howToUse: [
+          'Click "Create Assistant" to build a custom AI',
+          'Give your assistant a name and role description',
+          'Define what the assistant specializes in',
+          'Choose an emoji avatar for easy identification',
+          'Select an assistant to use it in conversations',
+          'Delete assistants you no longer need',
+          'Create multiple assistants for different use cases'
+        ]
+      },
+      history: {
+        title: 'History',
+        whatIs: 'History shows all your past conversations in chronological order. It provides a complete record of your chats with smart search capabilities, allowing you to quickly find and revisit any previous conversation by searching for keywords in titles or content.',
+        howToUse: [
+          'All conversations are automatically saved to History',
+          'Use the search bar to find specific chats',
+          'Click any conversation to load it',
+          'Chats are sorted by most recent activity',
+          'Add important chats to Favorites for quicker access',
+          'History persists across all your sessions',
+          'Search works across chat titles and content'
+        ]
+      },
+      templates: {
+        title: 'Templates',
+        whatIs: 'Templates are reusable prompt patterns that save you time. Instead of typing the same instructions repeatedly, you can create templates for common tasks like "Write a professional email" or "Explain this code" and reuse them with a single click.',
+        howToUse: [
+          'Click "New Template" to create a reusable prompt',
+          'Give your template a name and category',
+          'Write the template content with placeholders if needed',
+          'Access templates from the Templates panel',
+          'Click a template to insert it into your current chat',
+          'Organize templates by category for easier browsing',
+          'Edit or delete templates as your needs change'
+        ]
+      },
+      tags: {
+        title: 'Tags',
+        whatIs: 'Tags provide a flexible way to categorize and label your conversations. Unlike projects which group chats into folders, tags let you assign multiple labels to a single chat, making it easy to find conversations that match multiple criteria.',
+        howToUse: [
+          'Click "Create Tag" to make a new label',
+          'Give your tag a descriptive name',
+          'Apply tags to conversations from the chat view',
+          'Filter chats by clicking on a specific tag',
+          'A single chat can have multiple tags',
+          'Tags appear as colored chips for quick recognition',
+          'Use tags for flexible, cross-cutting organization'
+        ]
+      }
+    },
+
+    open(section) {
+      const data = this.data[section];
+      if (!data) return;
+
+      document.getElementById('infoPanelTitle').textContent = data.title;
+      document.getElementById('whatIsContent').textContent = data.whatIs;
+      
+      const howToUseList = document.getElementById('howToUseContent');
+      howToUseList.innerHTML = data.howToUse.map((step, index) => 
+        `<li><span class="step-number">${index + 1}</span><span class="step-text">${step}</span></li>`
+      ).join('');
+
+      this.switchTab('whatis');
+      
+      const modal = document.getElementById('infoPanelModal');
+      modal.classList.remove('hidden');
+    },
+
+    close() {
+      document.getElementById('infoPanelModal').classList.add('hidden');
+    },
+
+    switchTab(tab) {
+      document.querySelectorAll('.info-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.info-tab-content').forEach(c => c.classList.remove('active'));
+      
+      document.querySelector(`.info-tab[data-tab="${tab}"]`).classList.add('active');
+      document.getElementById(tab === 'whatis' ? 'whatIsTab' : 'howToUseTab').classList.add('active');
+    }
+  };
+
+  window.openInfoPanel = (section) => InfoPanelManager.open(section);
+  window.closeInfoPanel = () => InfoPanelManager.close();
+  window.switchInfoTab = (tab) => InfoPanelManager.switchTab(tab);
+  window.InfoPanelManager = InfoPanelManager;
+
+  // Initialize - will be called after auth check
+  window.initPanelManager = () => PanelManager.init();
+  
+  // Export helper functions for other scripts (onboarding, etc.)
+  window.getUserId = getUserId;
+  window.getUserKey = getUserKey;
+
+  // Function to update settings panel with user info (called after auth and after onboarding)
+  window.updateSettingsPanel = () => {
+    const user = JSON.parse(localStorage.getItem('ariagpt_user') || '{}');
+
+    const userNameEl = document.getElementById('userName');
+    const userEmailEl = document.getElementById('userEmail');
+    const userAvatarEl = document.getElementById('userAvatar');
+
+    if (userNameEl) userNameEl.textContent = user.displayName || 'User';
+    if (userEmailEl) userEmailEl.textContent = user.email || '';
+    if (userAvatarEl && user.photoURL) {
+      userAvatarEl.innerHTML = `<img src="${user.photoURL}" alt="Profile" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+    } else if (userAvatarEl) {
+      userAvatarEl.innerHTML = `<span style="font-size:1.5rem;">👤</span>`;
+    }
+  };
+
+</script>
+
+<!-- Firebase Auth -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+  import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+  // Your Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyB0Bje9ccGHO5fLIQ30vlC-6XdcnNBPZs0",
+    authDomain: "groqsocial.firebaseapp.com",
+    projectId: "groqsocial",
+    storageBucket: "groqsocial.firebasestorage.app",
+    messagingSenderId: "808235322921",
+    appId: "1:808235322921:web:1e43bffbe3c5e04c805638",
+    measurementId: "G-EY2DH72Q5Y"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // Check auth state and redirect if not signed in
+  onAuthStateChanged(auth, (user) => {
+    // Check for guest session
+    const guestSession = JSON.parse(localStorage.getItem('ariagpt_guest_session') || '{}');
+    const isGuest = guestSession.guestId && localStorage.getItem('ariagpt_user') && JSON.parse(localStorage.getItem('ariagpt_user') || '{}').isGuest;
+    
+    if (!user && !isGuest) {
+      // Not signed in and not a guest, redirect to login
+      window.location.href = 'login.html';
+    } else if (isGuest) {
+      // Guest user - allow access without Firebase auth
+      // Data already set in localStorage from login.html
+      if (window.initPanelManager) window.initPanelManager();
+      if (window.initChatApp) window.initChatApp();
+      if (window.OnboardingManager) window.OnboardingManager.init();
+      // Update settings panel with guest user info
+      setTimeout(() => window.updateSettingsPanel && window.updateSettingsPanel(), 100);
+    } else {
+      // Signed in FIRST, then load user-specific data
+      localStorage.setItem('ariagpt_user', JSON.stringify({
+        uid: user.uid,
+        displayName: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL
+      }));
+      
+      // NOW safe to load data with correct user ID
+      if (window.initPanelManager) window.initPanelManager();
+      if (window.initChatApp) window.initChatApp();
+      
+      // Show onboarding for new users
+      console.log('[Firebase Auth] Checking OnboardingManager:', window.OnboardingManager);
+      if (window.OnboardingManager) {
+        console.log('[Firebase Auth] Calling OnboardingManager.init() with uid:', user.uid);
+        // Pass the user explicitly to avoid any timing issues
+        window.OnboardingManager.init(user);
+      } else {
+        console.error('[Firebase Auth] OnboardingManager not found!');
+      }
+
+      // Update settings panel with user info
+      if (typeof window.updateSettingsPanel === 'function') {
+        window.updateSettingsPanel();
+      }
+    }
+  });
+
+  // Sign out function
+  window.signOutUser = async () => {
+    try {
+      await signOut(auth);
+      // Clear in-memory data to prevent any leakage
+      if (window.PanelManager) {
+        PanelManager.data = { projects: [], favorites: [], assistants: [], tags: [], settings: {} };
+      }
+      if (window.S) {
+        S.sessions = [];
+        S.currentId = null;
+      }
+      localStorage.removeItem('ariagpt_user');
+      // Note: device session is NOT cleared on sign-out
+      // This allows returning users on the same device to skip onboarding
+      window.location.href = 'login.html';
+    } catch (error) {
+      console.error('Sign out error:', error);
+      alert('Failed to sign out');
+    }
+  };
+</script>
+
+<!-- Onboarding Modal - Multi-Step Wizard -->
+<div id="onboardingModal" class="onboarding-overlay hidden">
+  <div class="onboarding-backdrop"></div>
+  <div class="onboarding-panel">
+    <!-- Step 1: Name -->
+    <div class="onboarding-step" data-step="1">
+      <div class="onboarding-header">
+        <div class="onboarding-step-indicator">Step 1 of 1</div>
+        <h2 class="onboarding-title">What's your name?</h2>
+        <p class="onboarding-subtitle">Let's get started</p>
+      </div>
+      <div class="onboarding-form">
+        <div class="onboarding-field">
+          <label for="onboardName">Full Name</label>
+          <input type="text" id="onboardName" placeholder="e.g. John Doe" required maxlength="50" autocomplete="name">
+        </div>
+        <button type="button" class="onboarding-submit" onclick="OnboardingManager.complete()">Get Started</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Complete -->
+    <div class="onboarding-step hidden" data-step="2">
+      <div class="onboarding-header">
+        <div class="onboarding-success-icon">✓</div>
+        <h2 class="onboarding-title">All Set!</h2>
+        <p class="onboarding-subtitle">Your profile is complete. Welcome to AriaGPT!</p>
+      </div>
+      <div class="onboarding-form">
+        <button type="button" class="onboarding-submit" onclick="OnboardingManager.hide()">Get Started</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Onboarding System - Multi-Step Wizard
+  console.log('[Onboarding] Script loaded');
+
+  const OnboardingManager = {
+    currentStep: 1,
+    totalSteps: 2,
+
+    // Helper to get user-specific key
+    getUserKey(key, uid) {
+      const userId = uid || (JSON.parse(localStorage.getItem('ariagpt_user') || '{}')).uid || 'anonymous';
+      return `ariagpt_${userId}_${key}`;
+    },
+
+    init(firebaseUser) {
+      console.log('[Onboarding] init() called with user:', firebaseUser?.uid);
+      this.currentStep = 1;
+      
+      // Get the user ID from passed user, or fall back to reading from storage
+      const user = firebaseUser || JSON.parse(localStorage.getItem('ariagpt_user') || '{}');
+      const uid = user.uid || 'anonymous';
+      
+      // Get user-specific keys using the explicit UID
+      const completeKey = this.getUserKey('onboarding_complete', uid);
+      const profileKey = this.getUserKey('onboarding_profile', uid);
+      
+      console.log('[Onboarding] Checking keys for uid:', uid, { completeKey, profileKey });
+      
+      const isComplete = localStorage.getItem(completeKey);
+      const savedProfile = JSON.parse(localStorage.getItem(profileKey) || '{}');
+      
+      // Check if user already has a name (from Google account or saved profile)
+      const existingName = savedProfile.name || user.displayName;
+      
+      console.log('[Onboarding] Status:', { isComplete, existingName, savedProfile, user: {uid: user.uid, displayName: user.displayName} });
+      
+      // If onboarding is marked complete OR user has a real name, skip the question
+      if (isComplete || (existingName && existingName !== 'Guest User' && existingName.trim())) {
+        const nameToUse = savedProfile.name || existingName || user.displayName || 'there';
+        console.log('[Onboarding] Skipping - already complete or has name:', nameToUse);
+        
+        // Ensure profile is saved if we have a name but no profile
+        if (!savedProfile.name && existingName && existingName !== 'Guest User') {
+          const profile = {
+            name: existingName,
+            completedAt: Date.now()
+          };
+          localStorage.setItem(profileKey, JSON.stringify(profile));
+          localStorage.setItem(completeKey, 'true');
+          console.log('[Onboarding] Saved profile for existing name to:', profileKey);
+        }
+        
+        // Update settings panel with the name
+        if (window.updateSettingsPanel) window.updateSettingsPanel();
+        
+        // Show welcome popup and skip the name question
+        showWelcomePopup();
+        return;
+      }
+      
+      // No name found and not complete - show the name question
+      console.log('[Onboarding] No name found, showing question');
+      this.show();
+    },
+
+    show() {
+      const modal = document.getElementById('onboardingModal');
+      if (!modal) {
+        console.error('[Onboarding] Modal element not found!');
+        return;
+      }
+      modal.classList.remove('hidden');
+      this.showStep(1);
+      // Pre-fill name from Google account if available
+      const user = JSON.parse(localStorage.getItem('ariagpt_user') || '{}');
+      if (user.displayName) {
+        document.getElementById('onboardName').value = user.displayName;
+      }
+    },
+
+    hide() {
+      document.getElementById('onboardingModal').classList.add('hidden');
+    },
+
+    showStep(step) {
+      // Hide all steps
+      document.querySelectorAll('.onboarding-step').forEach(s => s.classList.add('hidden'));
+      // Show current step
+      const currentStepEl = document.querySelector(`.onboarding-step[data-step="${step}"]`);
+      if (currentStepEl) {
+        currentStepEl.classList.remove('hidden');
+      }
+      this.currentStep = step;
+    },
+
+    nextStep() {
+      // Not used in simplified flow - button calls complete() directly
+    },
+
+    prevStep() {
+      if (this.currentStep > 1) {
+        this.showStep(this.currentStep - 1);
+      }
+    },
+
+    complete() {
+      const name = document.getElementById('onboardName').value.trim();
+
+      if (!name) {
+        document.getElementById('onboardName').focus();
+        return;
+      }
+
+      // Get current user uid from localStorage
+      const user = JSON.parse(localStorage.getItem('ariagpt_user') || '{}');
+      const uid = user.uid || 'anonymous';
+
+      // Save just the name
+      const profile = {
+        name,
+        completedAt: Date.now()
+      };
+
+      // Use explicit uid for consistency
+      const profileKey = this.getUserKey('onboarding_profile', uid);
+      const completeKey = this.getUserKey('onboarding_complete', uid);
+      
+      console.log('[Onboarding] Saving profile for uid:', uid, { profileKey, completeKey, profile });
+      
+      localStorage.setItem(profileKey, JSON.stringify(profile));
+      localStorage.setItem(completeKey, 'true');
+      
+      console.log('[Onboarding] Saved to localStorage:', { profileKey, completeKey });
+
+      // Update settings panel with name
+      if (typeof window.updateSettingsPanel === 'function') {
+        window.updateSettingsPanel();
+      }
+
+      // Show success step
+      this.showStep(2);
+      
+      // Show welcome popup after onboarding completes
+      setTimeout(() => showWelcomePopup(), 500);
+    }
+  };
+
+  window.OnboardingManager = OnboardingManager;
+
+  // Welcome Popup Animation - shows "hii [username]" in top-left
+  function showWelcomePopup() {
+    // Get user name from onboarding profile or user data
+    // Use consistent key generation matching OnboardingManager
+    const user = JSON.parse(localStorage.getItem('ariagpt_user') || '{}');
+    const uid = user.uid || 'anonymous';
+    const profileKey = `ariagpt_${uid}_onboarding_profile`;
+    
+    const profile = JSON.parse(localStorage.getItem(profileKey) || '{}');
+    const displayName = profile.name || user.displayName || 'there';
+    
+    // Create popup element
+    const popup = document.createElement('div');
+    popup.className = 'welcome-popup';
+    popup.innerHTML = `
+      <span class="welcome-popup-hii">hii</span>
+      <span class="welcome-popup-name">${escapeHtml(displayName)}</span>
+    `;
+    
+    document.body.appendChild(popup);
+    
+    // Trigger animation
+    requestAnimationFrame(() => {
+      popup.classList.add('show');
+    });
+    
+    // Remove after animation completes
+    setTimeout(() => {
+      popup.classList.add('hide');
+      setTimeout(() => popup.remove(), 400);
+    }, 2500);
+  }
+  
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+  
+  // Expose for global access
+  window.showWelcomePopup = showWelcomePopup;
+
+  // Onboarding auto-show is now handled by init() which checks for completion
+</script>
+
+<!-- Project Panel Slide-in -->
+<div class="project-panel-overlay" id="projectPanelOverlay" onclick="PanelManager.hideProjectPanel()"></div>
+<div class="project-panel" id="projectPanel">
+  <div class="project-panel-header">
+    <div class="project-panel-title" id="projectPanelTitle">Project</div>
+    <div class="project-panel-close" onclick="PanelManager.hideProjectPanel()">
+      <svg viewBox="0 0 20 20" fill="none" style="width: 16px; height: 16px; stroke: var(--txt3);">
+        <path d="M5 5l10 10M15 5L5 15" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+  <div class="project-panel-content" id="projectPanelContent">
+    <!-- Content injected by JavaScript -->
+  </div>
+</div>
+
+</body>
+</html>
